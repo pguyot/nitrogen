@@ -28,3 +28,9 @@ coverage: compile
 		-pa lib/coverize/ebin \
 		-s eunit_helper run_cover \
 		-s init stop
+
+console: compile
+	erl -pa ebin \
+		-pa test/ebin
+
+
