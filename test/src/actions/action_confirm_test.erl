@@ -14,7 +14,20 @@ new_confirm_1() ->
   lists:flatten(action_confirm:render_action(TriggerPath, TargetPath, Record)).
 
 
+result_1() ->
+  mock_app ! {action_confirm, self()},
+  receive
+    {action_confirm_response, Response} ->
+      Response;
+    _ -> {error}
+
+  end.
+
+test_1() ->
+  eunit_helper:regexpMatch("Do you want to continue", result_1()).
+
+
 basic_test_() ->
-  [?_assertEqual("wf_current_path=''; $(obj('target_path')).fadeIn(\"a_speed\");",
-                 new_confirm_1())
+  [?_assertEqual(true,
+                 test_1())
   ].

@@ -14,6 +14,7 @@ test: compile
 	erl -noshell \
 		-pa ebin \
 		-pa test/ebin \
+                -pa test/apps \
 		-s test_suite test \
 		-s init stop
 
@@ -31,6 +32,7 @@ coverage: compile
 
 console: compile
 	erl -pa ebin \
-		-pa test/ebin
+		-pa test/ebin \
+                -pa test/apps
 
 
