@@ -17,11 +17,16 @@ all_test_() ->
    {module, element_span_test},
    {module, element_value_test},
 
-	 {module, element_textarea_test},
+   {module, element_textarea_test},
 
    {module, action_add_class_test},
    {module, action_alert_test},
-   {module, action_jquery_effect_test},
-   {module, action_animate_test}
-   
+   {module, action_animate_test},
+   {module, action_appear_test},
+   {module, action_buttonize_test},
+   {module, action_comet_start_test},
+   {module, action_confirm_test},
+
+   {module, action_jquery_effect_test}
+
   ].
