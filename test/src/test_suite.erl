@@ -24,7 +24,6 @@ all_test_() ->
    {module, action_animate_test},
    {module, action_appear_test},
    {module, action_buttonize_test},
-   {module, action_comet_start_test},
    {module, action_confirm_test},
 
    {module, action_jquery_effect_test}
