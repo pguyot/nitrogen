@@ -7,6 +7,6 @@
 		{port, 8934},
 		{session_timeout, 20},
 		{sign_key, "XYZ"},
-		{wwwroot, "./wwwroot"}
+		{wwwroot, "./test/apps"}
 	]}
 ]}.
