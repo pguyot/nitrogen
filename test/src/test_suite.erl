@@ -19,6 +19,8 @@ all_test_() ->
 
    {module, element_textarea_test},
 
+   {module, validator_is_email_test},
+
    {module, action_add_class_test},
    {module, action_alert_test},
    {module, action_animate_test},
@@ -26,5 +28,4 @@ all_test_() ->
    {module, action_buttonize_test},
 
    {module, action_jquery_effect_test}
-
   ].
