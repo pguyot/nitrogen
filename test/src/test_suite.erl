@@ -5,7 +5,8 @@
 -include_lib("eunit/include/eunit.hrl").
 
 all_test_() ->
-  [{module, element_br_test},
+  [{module, nitrogen_file_test},
+   {module, element_br_test},
    {module, element_hr_test},
    {module, element_image_test},
    {module, element_label_test},
