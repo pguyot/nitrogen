@@ -15,16 +15,16 @@ create_page(Url, Dir) ->
 copy_file(SrcFile, DestFile) ->
     io:format("Copy Nitrogen Static: ~p~n", [filename:basename(DestFile)]),
     {ok, Mode} = file:read_file_info(SrcFile),
-    file:copy(SrcFile, DestFile),
+    {ok,_} = file:copy(SrcFile, DestFile),
     file:write_file_info(DestFile, Mode).
 
 copy_file(SrcFile, DestFile, Changes) ->
-    ParsedDestFile = replace_content(Changes, DestFile),
+    ParsedDestFile = binary_to_list(replace_content(Changes, DestFile)),
     io:format("Creating file: ~p~n", [filename:basename(ParsedDestFile)]),
     {ok, Mode} = file:read_file_info(SrcFile),
     {ok, Bin} = file:read_file(SrcFile),
-    Contents = replace_content(Changes, binary_to_list(Bin)),
-    ok = file:write_file(ParsedDestFile, list_to_binary(Contents)),
+    Contents = replace_content(Changes, Bin),
+    ok = file:write_file(ParsedDestFile, Contents),
     file:write_file_info(ParsedDestFile, Mode).
 
 
@@ -35,7 +35,4 @@ url_to_file(Dir, Url) ->
     filename:join(Dir, Filename++".erl").
 
 replace_content([{Key, Value}|_Rest], Contents) ->
-    re:replace(Contents, Key, Value,[global]).
-    
-
-    
+    re:replace(Contents, Key, Value,[global,{return,binary}]).
