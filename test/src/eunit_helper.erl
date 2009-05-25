@@ -40,4 +40,6 @@ run_cover() ->
     "./test/src/elements/html"
   ],
 
-  coverize:run(SourceDirs,test_suite).
+  application:start(mock_app_inets),
+  coverize:run(SourceDirs,test_suite),
+  application:stop(mock_app_inets).
