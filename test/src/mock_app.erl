@@ -5,13 +5,14 @@
 -include ("wf.inc").
 -compile(export_all).
 
+
 -include_lib("eunit/include/eunit.hrl").
 
 start(_, _) ->
+  process_flag(trap_exit, true),
   Result = nitrogen:start(),
   %io:format("appl = ~p~n",[application:get_application()]),
-  MockAppPid = spawn_link(mock_app,loop,[]),
-  register(mock_app, MockAppPid),
+  register(mock_app, spawn_link(mock_app,loop,[])),
   Result.
 
 stop(_) -> nitrogen:stop(mock_app).
@@ -23,8 +24,11 @@ request(Module) ->
 
 loop() ->
   receive
+    {'EXIT', From, Reason} ->
+      io:format("mock_app: Received unexpected EXIT - From: ~p  Reason: ~p~n",[From, Reason]),
+      loop();
     {action_comet_start, From} ->
-      %io:format("Received action_comet_start~n",[]),
+      %io:format("mock_app: Received action_comet_start~n",[]),
       Response = action_comet_start_test:new_comet_start_1(),
       From ! {action_comet_start_response, Response},
       loop();
@@ -32,6 +36,7 @@ loop() ->
       Response = action_confirm_test:new_confirm_1(),
       From ! {action_confirm_response, Response},
       loop();
-    _ ->
+    Other ->
+      io:format("mock_app: Received unexpected message ~p~n",[Other]),
       loop()
   end.
