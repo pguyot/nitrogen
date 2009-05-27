@@ -34,5 +34,8 @@ url_to_file(Dir, Url) ->
     Filename = string:join(Tokens, "_"),
     filename:join(Dir, Filename++".erl").
 
-replace_content([{Key, Value}|_Rest], Contents) ->
-    re:replace(Contents, Key, Value,[global,{return,binary}]).
+replace_content([], Contents) ->
+    Contents;
+replace_content([{Key, Value}|Rest], Contents) ->
+    Replaced = re:replace(Contents, Key, Value,[global,{return,binary}]),
+    replace_content(Rest, Replaced).
