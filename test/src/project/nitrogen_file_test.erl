@@ -23,5 +23,8 @@ result_1() ->
 
 basic_test_() ->
   [?_assertEqual(result_1(), create_test_page())
+%% Cannot run this due to interface not exporting replace_content
+%%   ?_assertEqual(<<"web_index web_cat web_dog">>,
+%%       nitrogen_file:replace_content([{"PAGE","web_index"},{"TEST","web_dog"},{"LOC","web_cat"}],"PAGE LOC TEST"))
   ].
 
