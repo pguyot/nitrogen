@@ -34,9 +34,11 @@ run_cover() ->
     "./src/lib",
     "./src/platforms",
     "./src/project",
-    "./src/validators"
+    "./src/validators",
     "./test/src",
     "./test/src/actions",
+    "./test/src/validators",
+    "./test/src/elements",
     "./test/src/elements/html"
   ],
 
