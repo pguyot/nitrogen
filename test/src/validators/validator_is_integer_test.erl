@@ -22,6 +22,3 @@ basic_test_() ->
      ?_assertEqual(true,  validator_is_integer:validate(no_value, "9999999999999999999999999")),
      ?_assertEqual(true,  validator_is_integer:validate(no_value, "32"))
     ].
-
-
-
