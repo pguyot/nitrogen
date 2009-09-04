@@ -17,7 +17,8 @@ get_application_tests() ->
     [
      {module, action_comet_start_test},
      {module, action_confirm_test},
-     {module, validator_confirm_password_test}
+     {module, validator_confirm_password_test},
+     {module, wf_platform_test}
     ].
 
 non_application_test_() ->
@@ -33,17 +34,17 @@ non_application_test_() ->
      {module, element_p_test},
      {module, element_span_test},
      {module, element_value_test},
-     
+
      {module, element_textarea_test},
      {module, validator_is_email_test},
      {module, validator_is_integer_test},
      {module, validator_is_required_test},
-     
+
      {module, action_add_class_test},
      {module, action_alert_test},
      {module, action_animate_test},
      {module, action_appear_test},
      {module, action_buttonize_test},
-     
+
      {module, action_jquery_effect_test}
     ].
