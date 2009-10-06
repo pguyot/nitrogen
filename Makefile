@@ -36,4 +36,13 @@ console: compile
 		-pa test/ebin \
                 -pa test/apps
 
+#EXPERIMENTAL - Bug in erl_tidy trashes -spec
+tidy: 
+	erl -noshell \
+		-s erl_tidy dir "./src" \
+		-s erl_tidy dir "./test/src" \
+		-s init stop
+	find ./ -name \*.bak -exec rm {} \;
+
+
 
