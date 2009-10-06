@@ -6,6 +6,9 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action(TriggerPath::string(),
+                    TargetPath::string(),
+                    Record::#animate{easing::wf_easing()}) -> wf_render_action()).
 render_action(TriggerPath, TargetPath, Record) ->
 	Effect = #jquery_effect {
 		type=animate,

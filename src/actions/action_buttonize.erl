@@ -6,7 +6,10 @@
 -include ("wf.inc").
 -compile(export_all).
 
-render_action(TriggerPath, TargetPath, _Record) -> 
+-spec(render_action(TriggerPath::string(),
+                    TargetPath::string(),
+                    _Record) -> wf_render_action()).
+render_action(TriggerPath, TargetPath, _Record) ->
 	Actions = [
 		#event { type=mouseover, actions=#add_class { class=hover } },
 		#event { type=mouseout, actions=#remove_class { class=hover } },

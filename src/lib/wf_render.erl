@@ -74,7 +74,9 @@ ensure_rendered(Terms) ->
 
 	
 %%% RENDER ACTIONS %%%
-
+-spec(render_actions(TriggerPath::wf_triggerpath(),
+                     TargetPath::wf_targetpath(),
+                     Terms::(undefined | list() | tuple())) -> string() | nil()).
 render_actions(_, _, undefined) -> [];
 render_actions(TriggerPath, TargetPath, Terms=[H|_]) when is_list(Terms), is_integer(H) -> render_actions(TriggerPath, TargetPath, #script { script=Terms });
 render_actions(TriggerPath, TargetPath, Terms) when is_list(Terms) -> [render_actions(TriggerPath, TargetPath, X) || X <- Terms];
