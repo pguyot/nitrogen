@@ -37,12 +37,13 @@ console: compile
                 -pa test/apps
 
 #EXPERIMENTAL - Bug in erl_tidy trashes -spec
+# {test,true} makes this nondestructive
+# change {test,true} to {test,false} for plenty of carnage
+# Do not commit the result - it is very wrong
 tidy: 
 	erl -noshell \
-		-s erl_tidy dir "./src" \
-		-s erl_tidy dir "./test/src" \
+		-eval 'erl_tidy:dir("./src", [{verbose,true},{test,true},{new_guard_tests,true},{no_imports,true},{keep_unused,true},{backups,true}])' \
+		-eval 'erl_tidy:dir("./test/src", [{verbose,true},{test,true},{new_guard_tests,true},{no_imports,true},{keep_unused,true},{backups,true}])' \
 		-s init stop
 	find ./ -name \*.bak -exec rm {} \;
-
-
 
