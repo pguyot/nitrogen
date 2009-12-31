@@ -31,7 +31,8 @@
 	set_response_code/1,
 	set_content_type/1,
 	set_response_body/1,
-	build_response/0
+	build_response/0,
+	build_post_redirect/1
 ]).
 
 

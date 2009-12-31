@@ -9,8 +9,8 @@
 start(ProcessName) ->
 	case whereis(ProcessName) of
 		undefined ->
-			Pid = spawn(fun() -> counter_loop(0, 0) end),
-			register(ProcessName, Pid);
+			spawn(fun() -> register(ProcessName, self()), counter_loop(0, 0) end),
+			ok;
 		_ -> ok
 	end.
 	
@@ -43,4 +43,3 @@ counter_loop(TotalCount, CountSinceLastCall) ->
 		Other -> 
 			?LOG("(~p:~p) Unexpected Message: ~p~n", [?MODULE, ?LINE, Other])
 	end.
-			
