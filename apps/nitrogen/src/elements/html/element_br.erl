@@ -11,5 +11,5 @@ reflect() -> record_info(fields, br).
 render_element(Record) -> 
     wf_tags:emit_tag(br, [
         {class, [br, Record#br.class]}, 
-        {style, Record#br.style}
-    ]).
+        {style, Record#br.style},
+        {title, Record#br.title} | Record#br.attrs]).

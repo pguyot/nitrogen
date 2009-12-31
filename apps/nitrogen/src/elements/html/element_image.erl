@@ -12,8 +12,8 @@ render_element(Record) ->
     Attributes = [
         {class, [image, Record#image.class]},
         {style, Record#image.style},
-        {src, Record#image.image}
-    ],
+        {src, Record#image.image},
+        {title, Record#image.title} | Record#image.attrs],
 
     FinalAttributes = case Record#image.alt of
         undefined -> Attributes;

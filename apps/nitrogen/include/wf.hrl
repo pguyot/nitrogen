@@ -62,11 +62,13 @@
 %%% FRAMEWORK %%%
 
 %%% Elements %%%
--define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="").
+%% HTML5 defines plenty of attributes, we support natively class, style and title (id is special).
+%% Other attributes should be encoded in a attrs proplist.
+-define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", title="", attrs=[]).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
--record(body, {?ELEMENT_BASE(element_body), title="", body=[]}).
+-record(body, {?ELEMENT_BASE(element_body), body=[]}).
 -record(h1, {?ELEMENT_BASE(element_h1), text="", html_encode=true}).
 -record(h2, {?ELEMENT_BASE(element_h2), text="", html_encode=true}).
 -record(h3, {?ELEMENT_BASE(element_h3), text="", html_encode=true}).
@@ -80,7 +82,7 @@
 -record(value, {?ELEMENT_BASE(element_value), text="", html_encode=true}).
 -record(link, {?ELEMENT_BASE(element_link), text="", body="", html_encode=true, url="javascript:", postback, delegate}).
 -record(error, {?ELEMENT_BASE(element_error), text="", html_encode=true}).
--record(span, {?ELEMENT_BASE(element_span), text="", html_encode=true}).
+-record(span, {?ELEMENT_BASE(element_span), text="", body="", html_encode=true}).
 -record(button, {?ELEMENT_BASE(element_button), text="Button", html_encode=true, postback, delegate}).
 -record(literal, {?ELEMENT_BASE(element_literal), text="", html_encode=true}).
 -record(textbox, {?ELEMENT_BASE(element_textbox), text="", html_encode=true, next, postback, delegate}).
@@ -138,7 +140,33 @@
 -record(grid_16, {?ELEMENT_BASE(element_grid), type=grid, columns=16, alpha, omega, push, pull, prefix, suffix, body}).
 -record(grid_clear,  {?ELEMENT_BASE(element_grid), type=clear, columns,  alpha, omega, push, pull, prefix, suffix, body}).
 
+-type nitrogen_grid_element() ::
+    #grid{} | #container_12{} | #container_16{} | #grid_1{} | #grid_2{} |
+    #grid_3{} | #grid_4{} | #grid_5{} | #grid_6{} | #grid_7{} | #grid_8{} |
+    #grid_9{} | #grid_10{} | #grid_11{} | #grid_12{} | #grid_13{} | #grid_14{} |
+    #grid_15{} | #grid_16{} | #grid_clear{}.
 
+%%% HTML aliases %%%
+-record(ul, {?ELEMENT_BASE(element_ul), body=[]}).
+-record(ol, {?ELEMENT_BASE(element_ol), body=[]}).
+-record(li, {?ELEMENT_BASE(element_li), body=[], text="", html_encode=true}).
+-record(img, {?ELEMENT_BASE(element_img), src="", alt, width="", height=""}).
+-record(a, {?ELEMENT_BASE(element_a), text="", body="", html_encode=true, href="javascript:", postback}).
+
+%%% Type for elements.
+-type nitrogen_element() ::
+        #elementbase{} | #template{} | #function_el{} | #body{} | #h1{} |
+        #h2{} | #h3{} | #h4{} | #list{} | #listitem{} | #br{} | #hr{} | #p{} |
+        #label{} | #value{} | #link{} | #error{} | #span{} | #button{} |
+        #literal{} | #textbox{} | #hidden{} | #textarea{} |
+        #datepicker_textbox{} | #dropdown{} | #option{} | #checkbox{} |
+        #radiogroup{} | #radio{} | #password{} | #panel{} | #spinner{} |
+        #image{} | #lightbox{} | #table{} | #tablerow{} | #tableheader{} |
+        #tablecell{} | #singlerow{} | #file{} | #flash{} | #placeholder{} |
+        #bind{} | #sortblock{} | #sortitem{} | #draggable{} | #droppable{} |
+        #gravatar{} | #inplace_textbox{} | #wizard{} | #upload{} |
+        #sparkline{} | #ul{} | #ol{} | #li{} | #img{} | #a{} |
+        nitrogen_grid_element().
 
 %%% Actions %%%
 -define(ACTION_BASE(Module), is_action=is_action, module=Module, anchor, trigger, target, actions, show_if=true).
@@ -170,6 +198,15 @@
 -record(animate, {?ACTION_BASE(action_animate), options=[], speed=500, easing=swing}).
 -record(buttonize, {?ACTION_BASE(action_buttonize)}).
 
+%%% Type for actions.
+-type nitrogen_action() ::
+        #actionbase{} | #wire{} | #update{} | #comet{} | #continue{} | #api{} |
+        #function{} | #set{} | #redirect{} | #event{} | #validate{} |
+        #validation_error{} | #alert{} | #confirm{} | #script{} |
+        #disable_selection{} | #jquery_effect{} | #show{} | #hide{} |
+        #appear{} | #fade{} | #effect{} | #toggle{} | #add_class{} |
+        #remove_class{} | #animate{} | #buttonize{}.
+
 %%% Validators %%%
 -define(VALIDATOR_BASE(Module), ?ACTION_BASE(Module), text="Failed.").
 -record(validatorbase, {?VALIDATOR_BASE(undefined)}).
@@ -182,5 +219,10 @@
 -record(custom, {?VALIDATOR_BASE(validator_custom), function, tag }).
 -record(js_custom, {?VALIDATOR_BASE(validator_js_custom), function, args="{}" }).
 
+%%% Type for validators.
+-type nitrogen_validator() ::
+        #validatorbase{} | #is_required{} | #is_email{} | #is_integer{} |
+        #min_length{} | #max_length{} | #confirm_password{} | #custom{} |
+        #js_custom{}.
 
 -endif.

@@ -12,5 +12,5 @@ render_element(Record) ->
     Text = wf:html_encode(Record#value.text, Record#value.html_encode),
     wf_tags:emit_tag(span, Text, [
         {class, [value, Record#value.class]},
-        {style, Record#value.style}
-    ]).
+        {style, Record#value.style},
+        {title, Record#value.title} | Record#value.attrs]).

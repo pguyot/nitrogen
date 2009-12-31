@@ -16,5 +16,5 @@ render_element(Record) ->
 
     wf_tags:emit_tag(li, Body, [
         {class, [listitem, Record#listitem.class]},
-        {style, Record#listitem.style}
-    ]).
+        {style, Record#listitem.style},
+        {title, Record#listitem.title} | Record#listitem.attrs]).
