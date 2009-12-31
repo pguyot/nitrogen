@@ -35,7 +35,12 @@ init([ServingApp]) ->
 	MaxRestarts = 1000,
 	MaxSecondsBetweenRestarts = 3600,
 	SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
-	NitrogenServer = {quickstart_sup, {nitrogen, start_server, []}, permanent, 2000, worker, dynamic},
+	NitrogenServerModules = case get_platform() of
+		yaws     -> [yaws_sup];
+		mochiweb -> [mochiweb_socket_server];
+		inets    -> []  % server is started with inets:start/2
+	end,
+	NitrogenServer = {quickstart_sup, {nitrogen, start_server, []}, permanent, 2000, worker, NitrogenServerModules},
 	SessionServer  = {wf_session_server, {wf_session_server, start_link, []}, permanent, 2000, worker, [wf_session_server]},
 	SessionSup     = {wf_session_sup, {wf_session_sup, start_link, []}, permanent, 2000, supervisor, [wf_session_sup]},
 	{ok,{SupFlags,[NitrogenServer, SessionServer, SessionSup]}}.
