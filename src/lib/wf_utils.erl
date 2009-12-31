@@ -219,7 +219,9 @@ js_escape(<<>>, Acc) -> Acc.
 %%% MODULE PATH %%%
 
 %% path_to_module/1 - Convert a web path to a module.
-path_to_module(undefined) -> {web_index, ""};
+path_to_module(undefined) ->
+    IndexModule = nitrogen:get_index_module(),
+    {IndexModule, ""};
 path_to_module(S) -> 
 	case lists:last(S) of
 		$/ -> 
@@ -229,7 +231,9 @@ path_to_module(S) ->
 			tokens_to_module(string:tokens(S, "/"), [], false)
 	end.
 	
-tokens_to_module([], PathInfoAcc, AddedIndex) -> {web_404, to_path_info(PathInfoAcc, AddedIndex)};
+tokens_to_module([], PathInfoAcc, AddedIndex) ->
+    NotFoundModule = nitrogen:get_404_module(),
+    {NotFoundModule, to_path_info(PathInfoAcc, AddedIndex)};
 tokens_to_module(Tokens, PathInfoAcc, AddedIndex) ->
 	try
 		% Try to get the name of a module.

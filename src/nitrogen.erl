@@ -21,7 +21,10 @@
 	get_wwwroot/0,
 	get_templateroot/0,
 	get_hooks_module/0,
-	get_scratch_directory/0
+	get_scratch_directory/0,
+	get_index_module/0,
+	get_404_module/0,
+	get_error_module/0
 ]).
 
 start() -> start(undefined).
@@ -159,6 +162,24 @@ get_scratch_directory() ->
 	case get_env(serving_app(), scratch_directory) of
 		{ok, Val} -> Val;
 		_ -> "./scratch"
+	end.
+
+get_index_module() ->
+	case get_env(serving_app(), web_index) of
+		{ok, Val} -> Val;
+		_ -> web_index
+	end.
+
+get_404_module() ->
+	case get_env(serving_app(), web_404) of
+		{ok, Val} -> Val;
+		_ -> web_404
+	end.
+
+get_error_module() ->
+	case get_env(serving_app(), web_error) of
+		{ok, Val} -> Val;
+		_ -> web_error
 	end.
 
 serving_app() -> 

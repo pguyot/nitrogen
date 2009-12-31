@@ -9,10 +9,13 @@
 do(Info) ->
 	wf_platform:init(wf_platform_inets, Info),
 	{Path, _QueryString} = httpd_util:split_path(Info#mod.request_uri),
-	{Module, PathInfo} = wf_platform:route(Path),
 	case Path of
-		"/" -> do(Info, web_index);
-		"/web" ++ _ -> do(Info, Module, PathInfo);
+		"/" ->
+		    IndexModule = nitrogen:get_index_module(),
+		    do(Info, IndexModule);
+		"/web" ++ _ ->
+        	{Module, PathInfo} = wf_platform:route(Path),
+		    do(Info, Module, PathInfo);
 		_ -> {proceed, Info#mod.data}
 	end.
 	

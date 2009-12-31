@@ -31,7 +31,8 @@ run_module_main(Module) ->
 		Module:main()
 	catch Type : Msg -> 
 		?LOG("ERROR: ~p~n~p~n~p", [Type, Msg, erlang:get_stacktrace()]),
-		web_error:main()
+		ErrorModule = nitrogen:get_error_module(),
+		ErrorModule:main()
 	end,
 
 	% Call render if it has not already been called.
