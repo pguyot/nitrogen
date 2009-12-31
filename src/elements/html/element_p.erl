@@ -13,6 +13,6 @@ render(ControlID, Record) ->
 	wf_tags:emit_tag(p, Content, [
 		{id, ControlID}, 
 		{class, [p, Record#p.class]},
-		{style, Record#p.style}
-	]).
+		{style, Record#p.style},
+	    {title, Record#p.title} | Record#p.attrs]).
 	

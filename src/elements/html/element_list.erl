@@ -6,8 +6,10 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(reflect/0::() -> [atom()]).
 reflect() -> record_info(fields, list).
 
+-spec(render/2::(string(), #list{}) -> iodata()).
 render(ControlID, Record) -> 
 	Tag = case Record#list.numbered of 
 		true -> ol;
@@ -18,5 +20,5 @@ render(ControlID, Record) ->
 	wf_tags:emit_tag(Tag, Content, [
 		{id, ControlID},
 		{class, [list, Record#list.class]},
-		{style, Record#list.style}
-	]).
+		{style, Record#list.style},
+	    {title, Record#list.title} | Record#list.attrs]).

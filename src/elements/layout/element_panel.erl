@@ -13,5 +13,5 @@ render(ControlID, Record) ->
 	wf_tags:emit_tag('div', Content, [
 	    {id, ControlID},
 	    {class, ["panel", Record#panel.class]},
-	    {style, Record#panel.style}
-	]).
+	    {style, Record#panel.style},
+	    {title, Record#panel.title} | Record#panel.attrs]).

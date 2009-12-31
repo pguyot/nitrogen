@@ -23,6 +23,6 @@ basic_test_() ->
   [?_assertEqual("<label id=\"1\" class=\"label\"></label>",new_label_1()),
    ?_assertEqual("<label id=\"2\" class=\"label t_label\"></label>",new_label_2()),
    ?_assertEqual("<label id=\"3\" class=\"label t_label\" style=\"color: cyan;\">Username:</label>",new_label_3()),
-   ?_assertEqual([module,id,actions,show_if,class,style,text,html_encode],
+   ?_assertEqual([module,id,actions,show_if,class,style,title,attrs,text,html_encode],
 	 element_label:reflect())
   ].

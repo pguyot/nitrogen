@@ -23,6 +23,6 @@ basic_test_() ->
   [?_assertEqual("",new_literal_1()),
    ?_assertEqual("",new_literal_2()),
    ?_assertEqual("http://an_literal.com/sample/literal.jpg",new_literal_3()),
-   ?_assertEqual([module,id,actions,show_if,class,style,text,html_encode],
+   ?_assertEqual([module,id,actions,show_if,class,style,title,attrs,text,html_encode],
 	 element_literal:reflect())
   ].

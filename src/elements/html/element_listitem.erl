@@ -6,8 +6,10 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(reflect/0::() -> [atom()]).
 reflect() -> record_info(fields, listitem).
 
+-spec(render/2::(string(), #listitem{}) -> iodata()).
 render(ControlID, Record) -> 
 	Content = [
 		wf:html_encode(Record#listitem.text, Record#listitem.html_encode),
@@ -17,5 +19,5 @@ render(ControlID, Record) ->
 	wf_tags:emit_tag(li, Content, [
 		{id, ControlID},
 		{class, [listitem, Record#listitem.class]},
-		{style, Record#listitem.style}
-	]).
+		{style, Record#listitem.style},
+	    {title, Record#listitem.title} | Record#listitem.attrs]).

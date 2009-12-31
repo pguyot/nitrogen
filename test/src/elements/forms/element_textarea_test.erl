@@ -21,6 +21,6 @@ basic_test_() ->
   [?_assertEqual("<textarea id=\"1\" name=\"1\" class=\"textarea\"></textarea>",new_textarea_1()),
    ?_assertEqual("<textarea id=\"2\" name=\"2\" class=\"textarea t_textarea\"></textarea>",new_textarea_2()),
    ?_assertEqual("<textarea id=\"3\" name=\"3\" class=\"textarea t_textarea\" style=\"color: cyan;\">TEXT</textarea>",new_textarea_3()),
-   ?_assertEqual([module,id,actions,show_if,class,style,text,html_encode],
+   ?_assertEqual([module,id,actions,show_if,class,style,title,attrs,text,html_encode],
 	 element_textarea:reflect())
   ].

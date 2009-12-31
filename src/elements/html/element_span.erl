@@ -11,9 +11,12 @@ reflect() -> record_info(fields, span).
 %%% CODE %%%
 
 render(ControlID, Record) -> 
-  Contents = wf:html_encode(Record#span.text, Record#span.html_encode),
-	wf_tags:emit_tag(span, Contents, [
+	Content = [
+		wf:html_encode(Record#span.text, Record#span.html_encode),
+		wf:render(Record#span.body)
+	],
+	wf_tags:emit_tag(span, Content, [
         {id, ControlID},
         {class, Record#span.class}, 
-        {style, Record#span.style}
-    ]).
+        {style, Record#span.style},
+	    {title, Record#span.title} | Record#span.attrs]).

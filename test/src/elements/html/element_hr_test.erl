@@ -23,6 +23,6 @@ basic_test_() ->
   [?_assertEqual("<hr size=\"1\" id=\"1\" class=\"hr\"/>",new_hr_1()),
    ?_assertEqual("<hr size=\"1\" id=\"2\" class=\"hr t_hr\"/>",new_hr_2()),
    ?_assertEqual("<hr size=\"1\" id=\"3\" class=\"hr t_hr\" style=\"color: cyan;\"/>",new_hr_3()),
-   ?_assertEqual([module,id,actions,show_if,class,style],
+   ?_assertEqual([module,id,actions,show_if,class,style,title,attrs],
 	 element_hr:reflect())
   ].

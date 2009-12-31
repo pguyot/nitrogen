@@ -13,5 +13,5 @@ render(ControlID, Record) ->
 		{size, 1},
 		{id, ControlID},
 		{class, [hr, Record#hr.class]},
-		{style, Record#hr.style}
-	]).
+		{style, Record#hr.style},
+	    {title, Record#hr.title} | Record#hr.attrs]).

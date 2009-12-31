@@ -39,6 +39,6 @@ basic_test_() ->
    ?_assertEqual("<ol id=\"4\" class=\"list\"/>",new_list_4()),
    ?_assertEqual("<ol id=\"5\" class=\"list t_list\"/>",new_list_5()),
    ?_assertEqual("<ol id=\"6\" class=\"list t_list\" style=\"color: cyan;\">SOME BODY</ol>",new_list_6()),
-   ?_assertEqual([module,id,actions,show_if,class,style,numbered,body],
+   ?_assertEqual([module,id,actions,show_if,class,style,title,attrs,numbered,body],
 	 element_list:reflect())
   ].
