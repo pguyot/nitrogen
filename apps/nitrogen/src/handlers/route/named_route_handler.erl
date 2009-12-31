@@ -87,9 +87,10 @@ check_for_404(Module, PathInfo, Path) ->
     % is not available, then default to the 'file_not_found_page' module.
     case code:ensure_loaded(Module) of
         {module, Module} -> {Module, PathInfo};
-        _ -> 
-            case code:ensure_loaded(web_404) of
-                {module, web_404} -> {web_404, Path};
+        _ ->
+            Web404Module = wf:config_default(web_404_module, web_404),
+            case code:ensure_loaded(Web404Module) of
+                {module, Web404Module} -> {Web404Module, Path};
                 _ -> {file_not_found_page, Path}
             end
     end.
