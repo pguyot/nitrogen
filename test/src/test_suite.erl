@@ -5,7 +5,7 @@
 -include_lib("eunit/include/eunit.hrl").
 -compile([export_all]).
 
-all_tests_() ->
+all_test_() ->
     [{module, nitrogen_file_test},
      {module, element_br_test},
      {module, element_hr_test},
