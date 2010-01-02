@@ -85,6 +85,9 @@ render(Terms) -> wf_render:render(Terms).
 update(Element, Terms) -> wf_render:update(Element, Terms).
 insert_top(Element, Terms) -> wf_render:insert_top(Element, Terms).
 insert_bottom(Element, Terms) -> wf_render:insert_bottom(Element, Terms).
+insert_before(Element, Terms) -> wf_render:insert_before(Element, Terms).
+insert_after(Element, Terms) -> wf_render:insert_after(Element, Terms).
+replace(Element, Terms) -> wf_render:replace(Element, Terms).
 
 wire(Actions) -> wf_render:wire(Actions).
 wire(TargetID, Actions) -> wf_render:wire(TargetID, Actions).

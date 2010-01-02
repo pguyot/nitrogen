@@ -357,6 +357,17 @@ N.$insert_bottom = function(el, html) {
 	jQuery(el).append(html);
 }
 
+N.$insert_before = function(el, html) {
+	jQuery(el).before(html);
+}
+
+N.$insert_after = function(el, html) {
+	jQuery(el).after(html);
+}
+
+N.$replace = function(el, html) {
+	jQuery(el).replaceWith(html);
+}
 
 /*** MISC ***/
 

@@ -13,6 +13,9 @@
 	update/2,
 	insert_top/2,
 	insert_bottom/2,
+	insert_before/2,
+	insert_after/2,
+	replace/2,
 	
 	wire/1, wire/2, wire/3
 ]).
@@ -116,6 +119,9 @@ render_actions(TriggerPath, TargetPath, Term) when is_tuple(Term) ->
 update(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$update(obj('me'), \"~s\");").
 insert_top(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_top(obj('me'), \"~s\");").
 insert_bottom(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_bottom(obj('me'), \"~s\");").
+insert_before(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_before(obj('me'), \"~s\");").
+insert_after(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_after(obj('me'), \"~s\");").
+replace(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$replace(obj('me'), \"~s\");").
 
 update(TargetPath, Terms, JSFormatString) ->
 	UpdateQueue = get(wf_update_queue),
