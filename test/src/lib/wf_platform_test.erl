@@ -14,8 +14,15 @@ new_add_class_1() ->
     lists:flatten(action_add_class:render_action(TriggerPath, TargetPath, Record)).
 
 basic_test_() ->
+    {setup,
+    fun() ->
+        ok = application:start(mock_app_inets)
+    end,
+    fun(_) ->
+        ok = application:stop(mock_app_inets)
+    end,
     [?_assertEqual("Nitrogen.$current_id='';" ++
                    "Nitrogen.$current_path='';" ++
                    "jQuery(obj('target_path')).addClass('a_class', \"a_speed\");",
                    new_add_class_1())
-    ].
+    ]}.

@@ -66,8 +66,15 @@ test_2() ->
 
 
 basic_test_() ->
+    {setup,
+    fun() ->
+        ok = application:start(mock_app_inets)
+    end,
+    fun(_) ->
+        ok = application:stop(mock_app_inets)
+    end,
     [
      ?_assertEqual(true, test_1()),
      ?_assertEqual(true, test_2()),
      ?_assertEqual(true, new_validator_3())
-    ].
+    ]}.

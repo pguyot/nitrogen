@@ -11,10 +11,10 @@ clean:
 	rm -rf ./test/ebin/*.*
 
 test: compile
+	cp test/src/*.app test/ebin/    
 	erl -noshell \
 		-pa ebin \
 		-pa test/ebin \
-                -pa test/apps \
 		-s test_suite test \
 		-s init stop
 
@@ -23,18 +23,18 @@ coverage: compile
 	git submodule update lib/coverize
 	make -C lib/coverize
 	mkdir -p coverage
+	cp test/src/*.app test/ebin/    
 	erl -noshell \
 		-pa ebin \
 		-pa test/ebin \
-		-pa test/apps \
 		-pa lib/coverize/ebin \
 		-s eunit_helper run_cover \
 		-s init stop
 
 console: compile
+	cp test/src/*.app test/ebin/    
 	erl -pa ebin \
-		-pa test/ebin \
-                -pa test/apps
+		-pa test/ebin
 
 #EXPERIMENTAL - Bug in erl_tidy trashes -spec
 # {test,true} makes this nondestructive

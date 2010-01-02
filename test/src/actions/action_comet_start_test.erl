@@ -26,5 +26,13 @@ test_1() ->
     eunit_helper:regexpMatch("Nitrogen\\\.\\\$comet_start", result_1()).
 
 basic_test_() ->
+    {setup,
+    fun() ->
+        ok = application:start(mock_app_inets)
+    end,
+    fun(_) ->
+        ok = application:stop(mock_app_inets)
+    end,
     [?_assertEqual(true,test_1())
-    ].
+    ]}.
+    
