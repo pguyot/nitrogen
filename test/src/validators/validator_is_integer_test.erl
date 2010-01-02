@@ -8,6 +8,7 @@
 -include("wf.inc").
 
 new_validator_1() ->
+    wf:clear_state(),
     Rec = #is_integer{text="footext"},
     TriggerPath = "trigger_path",
     TargetPath = "target_path",

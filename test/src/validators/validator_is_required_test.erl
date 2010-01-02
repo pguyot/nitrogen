@@ -8,12 +8,14 @@
 -include("wf.inc").
 
 new_validator_1() ->
+    wf:clear_state(),
     Rec = #is_required{text="footext"},
     TriggerPath = "trigger_path",
     TargetPath = "target_path",
     lists:flatten(validator_is_required:render_validator(TriggerPath,TargetPath,Rec)).
 
 new_validator_with_module() ->
+    wf:clear_state(),
     Rec = #is_required{text="footext", module="a_module"},
     TriggerPath = "trigger_path",
     TargetPath = "target_path",
