@@ -6,8 +6,7 @@
 -compile([export_all]).
 
 all_test_() ->
-    [{module, nitrogen_file_test},
-     {module, element_br_test},
+    [{module, element_br_test},
      {module, element_hr_test},
      {module, element_image_test},
      {module, element_label_test},
