@@ -13,7 +13,7 @@
 -type(wf_path()            :: me | atom() | string() | [atom()] | [string()]).
 -type(wf_targetpath()      :: wf_path()).
 -type(wf_triggerpath()     :: wf_path()).
--type(wf_id()              :: atom() | string()).
+-type(wf_id()              :: atom() | iodata()).
 
 %%% LOGGING %%%
 -define(PRINT(Var), error_logger:info_msg("DEBUG: ~p:~p - ~p: ~p~n", [?MODULE, ?LINE, ??Var, Var])).
