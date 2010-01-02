@@ -6,17 +6,24 @@
 -compile([export_all]).
 
 all_test_() ->
-    [{module, element_br_test},
+    [{module, element_a_test},
+     {module, element_br_test},
      {module, element_hr_test},
      {module, element_image_test},
+     {module, element_img_test},
      {module, element_label_test},
+     {module, element_li_test},
      {module, element_link_test},
      {module, element_list_test},
      {module, element_listitem_test},
      {module, element_literal_test},
+     {module, element_ol_test},
      {module, element_p_test},
      {module, element_span_test},
+     {module, element_ul_test},
      {module, element_value_test},
+
+     {module, element_panel_test},
 
      {module, element_textarea_test},
      {module, validator_confirm_password_test},
