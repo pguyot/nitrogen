@@ -28,6 +28,12 @@ insert_top(Target, Elements) ->
 insert_bottom(Target, Elements) -> 
     ok = action_update:insert_bottom(Target, Elements).
 
+insert_before(Target, Elements) -> 
+    ok = action_update:insert_before(Target, Elements).
+
+insert_after(Target, Elements) -> 
+    ok = action_update:insert_after(Target, Elements).
+
 remove(Target) ->
     ok = action_update:remove(Target).
 
