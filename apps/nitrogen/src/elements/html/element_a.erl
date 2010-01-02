@@ -6,11 +6,11 @@
 -include ("wf.inc").
 -compile(export_all).
 
--spec(reflect/0::() -> [atom()]).
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, a).
 
--spec(render/1::(#a{}) -> iodata()).
-render(#a{
+-spec render_element(#a{}) -> iodata().
+render_element(#a{
     module = ?MODULE,
     id = Id,
     actions = Actions,
@@ -24,7 +24,7 @@ render(#a{
     html_encode = HTMLEncode,
     href = HREF,
     postback = Postback}) ->
-    element_link:render(#link{
+    element_link:render_element(#link{
             module = element_link,
             id = Id,
             actions = Actions,

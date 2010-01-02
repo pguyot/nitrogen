@@ -7,6 +7,7 @@
 -compile(export_all).
 
 % This action is used internally by Nitrogen.
+-spec render_action(#wire{}) -> wf_render_action_data().
 render_action(Record) ->
     try 
         DefaultAnchor = Record#wire.anchor,

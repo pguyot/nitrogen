@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#effect{}) -> wf_render_action_data().
 render_action(Record) ->
     #jquery_effect {
         type=effect,

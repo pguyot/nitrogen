@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#redirect{}) -> wf_render_action_data().
 render_action(Record) ->
     DestinationUrl = Record#redirect.url,
     wf:f("window.location=\"~s\";", [wf:js_escape(DestinationUrl)]).

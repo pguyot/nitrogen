@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#script{}) -> wf_render_action_data().
 render_action(Record) -> 
     Record#script.script.
 

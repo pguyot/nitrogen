@@ -10,7 +10,7 @@ reflect() -> record_info(fields, file).
 
 render_element(Record) -> 
     FileName = Record#file.file,
-    FilePath = io_lib:format(FileName),
+    FilePath = lists:flatten(FileName),
     FileContents = case file:read_file(FilePath) of
         {ok, B} -> 
             B;

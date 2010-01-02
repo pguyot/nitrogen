@@ -13,6 +13,7 @@ continue(Tag, Fun, TimeoutMS) ->
 
 %%% - ACTIONS - %%%
 
+-spec render_action(#continue{}) -> wf_render_action_data().
 render_action(Record) -> 
     ?PRINT(render_action),
     % Spawn a wrapped comet function.

@@ -6,11 +6,11 @@
 -include ("wf.inc").
 -compile(export_all).
 
--spec(reflect/0::() -> [atom()]).
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, ul).
 
--spec(render/1::(#ul{}) -> iodata()).
-render(#ul{
+-spec render_element(#ul{}) -> iodata().
+render_element(#ul{
     module = ?MODULE,
     id = Id,
     actions = Actions,
@@ -20,7 +20,7 @@ render(#ul{
     title = Title,
     attrs = Attrs,
     body = Body}) ->
-    element_list:render(#list{
+    element_list:render_element(#list{
             module = element_list,
             id = Id,
             actions = Actions,

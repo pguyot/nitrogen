@@ -7,6 +7,7 @@
 -compile(export_all).
 
 % This action is used internally by Nitrogen.
+-spec render_action(#update{}) -> wf_render_action_data().
 render_action(Record) ->
     Type    = Record#update.type,
     Anchor  = Record#update.anchor,

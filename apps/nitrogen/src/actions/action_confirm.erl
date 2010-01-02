@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#confirm{}) -> wf_render_action_data().
 render_action(Record) -> 
     TriggerPath = Record#confirm.trigger,
     TargetPath = Record#confirm.target,

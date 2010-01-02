@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#event{}) -> wf_render_action_data().
 render_action(#event { 
     postback=Postback, actions=Actions, 
     anchor=Anchor, trigger=Trigger, target=Target, validation_group=ValidationGroup,

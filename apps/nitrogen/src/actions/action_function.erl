@@ -7,6 +7,7 @@
 -compile(export_all).
 
 % This action is used internally by Nitrogen.
+-spec render_action(#function{}) -> wf_render_action_data().
 render_action(Record) ->
     F = Record#function.function,
     F().

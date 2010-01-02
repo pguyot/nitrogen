@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#buttonize{}) -> wf_render_action_data().
 render_action(_Record) -> 
     Actions = [
         #event { type=mouseover, actions=#add_class { class=hover } },

@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#validation_error{}) -> wf_render_action_data().
 render_action(Record) -> 
     TargetPath = Record#validation_error.target,
     Text = wf:js_escape(Record#validation_error.text),

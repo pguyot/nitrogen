@@ -77,6 +77,7 @@ send_global(Pool, Message) ->
 
 %%% - ACTION - %%%
 
+-spec render_action(#comet{}) -> wf_render_action_data().
 render_action(Record) -> 
     % If the pool is undefined, then give it a random value.
     Record1 = case Record#comet.pool == undefined of

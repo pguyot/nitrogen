@@ -6,6 +6,7 @@
 -include_lib ("wf.hrl").
 -compile(export_all).
 
+-spec render_action(#api{}) -> wf_render_action_data().
 render_action(Record) ->
     Anchor = Record#api.anchor,
     Name = Record#api.name,

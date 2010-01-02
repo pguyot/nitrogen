@@ -11,7 +11,7 @@ reflect() -> record_info(fields, span).
 render_element(Record) -> 
     Content = [
         wf:html_encode(Record#span.text, Record#span.html_encode),
-        wf:render(Record#span.body)
+        Record#span.body
     ],
     wf_tags:emit_tag(span, Content, [
         {class, Record#span.class}, 

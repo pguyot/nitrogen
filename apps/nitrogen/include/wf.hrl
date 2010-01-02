@@ -1,6 +1,20 @@
 -ifndef(wf_inc).
 -define(wf_inc, ok).
 
+-ifndef(HAVE_BOOLEAN).
+-type(boolean()            :: true | false).
+-endif.
+-type(wf_actions()         :: tuple() | list()).
+-type(wf_easing()          :: swing | linear).
+-type(wf_speed()           :: integer()).
+-type(wf_options()         :: list(tuple())).
+-type(wf_class()           :: iodata() | atom() | [any()]).
+-type(wf_postback()        :: string()).
+-type(wf_path()            :: me | atom() | string() | [atom()] | [string()]).
+-type(wf_targetpath()      :: wf_path()).
+-type(wf_triggerpath()     :: wf_path()).
+-type(wf_id()              :: atom() | string()).
+
 %%% CONTEXT %%%
 
 % Page Request Information.
@@ -64,7 +78,7 @@
 %%% Elements %%%
 %% HTML5 defines plenty of attributes, we support natively class, style and title (id is special).
 %% Other attributes should be encoded in a attrs proplist.
--define(ELEMENT_BASE(Module), is_element=is_element, module=Module, id, anchor, actions, show_if=true, class="", style="", title="", attrs=[]).
+-define(ELEMENT_BASE(Module), is_element=is_element, module=Module :: atom(), id::undefined | wf_id(), anchor, actions::undefined | wf_actions(), show_if=true ::boolean(), class=""::wf_class(), style=""::iodata(), title=""::undefined | iodata(), attrs=[]).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
@@ -88,8 +102,8 @@
 -record(textbox, {?ELEMENT_BASE(element_textbox), text="", html_encode=true, next, postback, delegate}).
 -record(hidden, {?ELEMENT_BASE(element_hidden), text="", html_encode=true}).
 -record(textarea, {?ELEMENT_BASE(element_textarea), text="", html_encode=true}).
--record(datepicker_textbox, {?ELEMENT_BASE(element_datepicker_textbox), text="", next, html_encode=true, validators=[], options = [{dateFormat, "yy-mm-dd"}] }).
--record(dropdown, {?ELEMENT_BASE(element_dropdown), options=[], html_encode=true, postback, delegate, value}).
+-record(datepicker_textbox, {?ELEMENT_BASE(element_datepicker_textbox), text="", next, html_encode=true, validators=[], options = [{dateFormat, "yy-mm-dd"}]::wf_options() }).
+-record(dropdown, {?ELEMENT_BASE(element_dropdown), options=[]::undefined | wf_options(), html_encode=true, postback, delegate, value}).
 -record(option, { text="", value="", selected=false }).
 -record(checkbox, {?ELEMENT_BASE(element_checkbox), text="", html_encode=true, checked=false, postback, delegate}).
 -record(radiogroup, {?ELEMENT_BASE(element_radiogroup), body=[]}).
@@ -140,7 +154,7 @@
 -record(grid_16, {?ELEMENT_BASE(element_grid), type=grid, columns=16, alpha, omega, push, pull, prefix, suffix, body}).
 -record(grid_clear,  {?ELEMENT_BASE(element_grid), type=clear, columns,  alpha, omega, push, pull, prefix, suffix, body}).
 
--type nitrogen_grid_element() ::
+-type wf_grid_element() ::
     #grid{} | #container_12{} | #container_16{} | #grid_1{} | #grid_2{} |
     #grid_3{} | #grid_4{} | #grid_5{} | #grid_6{} | #grid_7{} | #grid_8{} |
     #grid_9{} | #grid_10{} | #grid_11{} | #grid_12{} | #grid_13{} | #grid_14{} |
@@ -154,7 +168,7 @@
 -record(a, {?ELEMENT_BASE(element_a), text="", body="", html_encode=true, href="javascript:", postback}).
 
 %%% Type for elements.
--type nitrogen_element() ::
+-type wf_element() ::
         #elementbase{} | #template{} | #function_el{} | #body{} | #h1{} |
         #h2{} | #h3{} | #h4{} | #list{} | #listitem{} | #br{} | #hr{} | #p{} |
         #label{} | #value{} | #link{} | #error{} | #span{} | #button{} |
@@ -166,10 +180,10 @@
         #bind{} | #sortblock{} | #sortitem{} | #draggable{} | #droppable{} |
         #gravatar{} | #inplace_textbox{} | #wizard{} | #upload{} |
         #sparkline{} | #ul{} | #ol{} | #li{} | #img{} | #a{} |
-        nitrogen_grid_element().
+        wf_grid_element().
 
 %%% Actions %%%
--define(ACTION_BASE(Module), is_action=is_action, module=Module, anchor, trigger, target, actions, show_if=true).
+-define(ACTION_BASE(Module), is_action=is_action, module=Module :: atom(), anchor, trigger::undefined | wf_triggerpath(), target::undefined | wf_targetpath(), actions :: undefined | wf_actions(), show_if=true :: boolean()).
 -record(actionbase, {?ACTION_BASE(undefined)}).
 -record(wire, {?ACTION_BASE(action_wire)}).
 -record(update, {?ACTION_BASE(action_update), type=update, elements=[]}).
@@ -183,10 +197,10 @@
 -record(validate, {?ACTION_BASE(action_validate), on=submit, success_text=" ", group, validators, attach_to }).
 -record(validation_error, {?ACTION_BASE(action_validation_error), text="" }).
 -record(alert, {?ACTION_BASE(action_alert), text=""}).
--record(confirm, {?ACTION_BASE(action_confirm), text="", postback, delegate}).
+-record(confirm, {?ACTION_BASE(action_confirm), text=""::string(), postback, delegate}).
 -record(script, {?ACTION_BASE(action_script), script}).
 -record(disable_selection, {?ACTION_BASE(action_disable_selection)}).
--record(jquery_effect, {?ACTION_BASE(action_jquery_effect), type, effect, speed, options=[], class, easing}).
+-record(jquery_effect, {?ACTION_BASE(action_jquery_effect), type, effect, speed::undefined | wf_speed(), options=[]::wf_options(), class::undefined | wf_class(), easing::undefined | wf_easing()}).
 -record(show, {?ACTION_BASE(action_show), effect=none, options=[], speed=500}).
 -record(hide, {?ACTION_BASE(action_hide), effect=none, options=[], speed=500}).
 -record(appear, {?ACTION_BASE(action_appear), speed=500}).
@@ -199,7 +213,7 @@
 -record(buttonize, {?ACTION_BASE(action_buttonize)}).
 
 %%% Type for actions.
--type nitrogen_action() ::
+-type wf_action() ::
         #actionbase{} | #wire{} | #update{} | #comet{} | #continue{} | #api{} |
         #function{} | #set{} | #redirect{} | #event{} | #validate{} |
         #validation_error{} | #alert{} | #confirm{} | #script{} |
@@ -208,7 +222,7 @@
         #remove_class{} | #animate{} | #buttonize{}.
 
 %%% Validators %%%
--define(VALIDATOR_BASE(Module), ?ACTION_BASE(Module), text="Failed.").
+-define(VALIDATOR_BASE(Module), ?ACTION_BASE(Module), text="Failed.":: iodata()).
 -record(validatorbase, {?VALIDATOR_BASE(undefined)}).
 -record(is_required, {?VALIDATOR_BASE(validator_is_required)}).
 -record(is_email, {?VALIDATOR_BASE(validator_is_email)}).
@@ -220,9 +234,15 @@
 -record(js_custom, {?VALIDATOR_BASE(validator_js_custom), function, args="{}" }).
 
 %%% Type for validators.
--type nitrogen_validator() ::
+-type wf_validator() ::
         #validatorbase{} | #is_required{} | #is_email{} | #is_integer{} |
         #min_length{} | #max_length{} | #confirm_password{} | #custom{} |
         #js_custom{}.
+
+%%% Union types :
+%%% Type for render input.
+-type(wf_render_data() :: undefined | iodata() | wf_element() | [undefined | wf_element() | iodata()]).
+%%% Type for render_actions input. iodata() is rendered as a script.
+-type(wf_render_action_data() :: undefined | iodata() | wf_action() | [undefined | wf_action() | iodata()]).
 
 -endif.

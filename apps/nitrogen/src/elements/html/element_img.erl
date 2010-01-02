@@ -9,8 +9,8 @@
 -spec(reflect/0::() -> [atom()]).
 reflect() -> record_info(fields, img).
 
--spec(render/1::(#img{}) -> iodata()).
-render(#img{
+-spec(render_element/1::(#img{}) -> iodata()).
+render_element(#img{
     module = ?MODULE,
     id = Id,
     actions = Actions,
@@ -31,7 +31,7 @@ render(#img{
         [] -> Attrs1;
         _ -> [{height, Height} | Attrs1]
     end,
-    element_image:render(#image{
+    element_image:render_element(#image{
             module = element_image,
             id = Id,
             actions = Actions,
