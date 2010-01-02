@@ -15,8 +15,11 @@
 
 %%% CURRENT PATH %%%
 
+-spec(get_path/0::() -> wf_path()).
 get_path() -> get(current_path).
+-spec(push_path/1::(wf_path()) -> wf_path()).
 push_path(ID) -> put(current_path, [ID|get(current_path)]).
+-spec(pop_path/0::() -> wf_path()).
 pop_path() -> put(current_path, tl(get(current_path))).
 
 

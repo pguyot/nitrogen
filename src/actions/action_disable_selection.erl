@@ -6,6 +6,7 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #disable_selection{}) -> iodata()).
 render_action(_TriggerPath, TargetPath, _Record) -> 
 	[
 		wf:me_var(), 

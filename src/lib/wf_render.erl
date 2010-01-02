@@ -20,6 +20,7 @@
 	wire/1, wire/2, wire/3
 ]).
 
+-spec(me_var/0::() -> string()).
 me_var() -> 
 	ID = case get(current_id) of
 		undefined -> "";
@@ -29,6 +30,7 @@ me_var() ->
 	Path1 = wf_path:to_js_id(Path),
 	wf:f("Nitrogen.$current_id='~s';Nitrogen.$current_path='~s';", [ID, Path1]).
 
+-spec(render/1::(wf_render_data()) -> iodata()).
 render(undefined) -> "";
 render(Term) when is_binary(Term) -> Term;
 render(Terms=[H|_]) when is_list(Terms), is_integer(H) -> Terms;
@@ -68,6 +70,7 @@ render(Term) when is_tuple(Term) ->
 	end,
 	Response.
 	
+-spec(ensure_rendered/1::(wf_render_data()) -> iodata()).
 ensure_rendered(Terms) ->
 	% Call render if it has not already been called.
 	case wf:is_string(Terms) of
@@ -79,7 +82,7 @@ ensure_rendered(Terms) ->
 %%% RENDER ACTIONS %%%
 -spec(render_actions(TriggerPath::wf_triggerpath(),
                      TargetPath::wf_targetpath(),
-                     Terms::(undefined | list() | tuple())) -> string() | nil()).
+                     Terms::wf_render_action_data()) -> iodata()).
 render_actions(_, _, undefined) -> [];
 render_actions(TriggerPath, TargetPath, Terms=[H|_]) when is_list(Terms), is_integer(H) -> render_actions(TriggerPath, TargetPath, #script { script=Terms });
 render_actions(TriggerPath, TargetPath, Terms) when is_list(Terms) -> [render_actions(TriggerPath, TargetPath, X) || X <- Terms];
@@ -118,11 +121,17 @@ render_actions(TriggerPath, TargetPath, Term) when is_tuple(Term) ->
 	
 %%% AJAX UPDATES %%%
 	
+-spec(update/2::(wf_targetpath(), wf_render_data()) -> ok).
 update(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$update(obj('me'), \"~s\");").
+-spec(insert_top/2::(wf_targetpath(), wf_render_data()) -> ok).
 insert_top(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_top(obj('me'), \"~s\");").
+-spec(insert_bottom/2::(wf_targetpath(), wf_render_data()) -> ok).
 insert_bottom(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_bottom(obj('me'), \"~s\");").
+-spec(insert_before/2::(wf_targetpath(), wf_render_data()) -> ok).
 insert_before(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_before(obj('me'), \"~s\");").
+-spec(insert_after/2::(wf_targetpath(), wf_render_data()) -> ok).
 insert_after(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$insert_after(obj('me'), \"~s\");").
+-spec(replace/2::(wf_targetpath(), wf_render_data()) -> ok).
 replace(TargetPath, Terms) -> update(TargetPath, Terms, "Nitrogen.$replace(obj('me'), \"~s\");").
 
 update(TargetPath, Terms, JSFormatString) ->
@@ -133,12 +142,15 @@ update(TargetPath, Terms, JSFormatString) ->
 	
 %%% ACTION WIRING %%%
 
+-spec(wire/1::(wf_render_action_data()) -> ok).
 wire(Actions) -> 
 	wire(me, me, Actions).
 
+-spec(wire/2::(wf_path(), wf_render_action_data()) -> ok).
 wire(TriggerPath, Actions) ->	
 	wire(TriggerPath, TriggerPath, Actions).
 
+-spec(wire/3::(wf_triggerpath(), wf_targetpath(), wf_render_action_data()) -> ok).
 wire(TriggerPath, TargetPath, Actions) ->	
 	% Add to the queue of wired actions. These will be rendered in get_script().
 	ActionQueue = get(wf_action_queue),

@@ -6,6 +6,7 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #effect{}) -> iodata()).
 render_action(TriggerPath, TargetPath, Record) ->
 	Effect = #jquery_effect {
 		type=effect,

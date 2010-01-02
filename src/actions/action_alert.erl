@@ -6,8 +6,6 @@
 -include ("wf.inc").
 -compile(export_all).
 
--spec(render_action(_TriggerPath,
-                    _TargetPath,
-                    #alert{}) -> wf_render_action()).
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #alert{}) -> iodata()).
 render_action(_TriggerPath, _TargetPath, Record) ->
 	wf:f("alert(\"~s\");", [wf_utils:js_escape(Record#alert.text)]).

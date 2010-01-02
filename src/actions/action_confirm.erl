@@ -6,9 +6,7 @@
 -include ("wf.inc").
 -compile(export_all).
 
--spec(render_action(TriggerPath::wf_triggerpath(),
-                    TargetPath::wf_targetpath(),
-                    Record::#confirm{}) -> wf_render_action()).
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #confirm{}) -> iodata()).
 render_action(TriggerPath, TargetPath, Record) ->
 	Postback = action_event:make_postback(Record#confirm.postback, confirm, TriggerPath, TargetPath, undefined),
 	Actions = [wf_render:render_actions(TriggerPath, TargetPath, Record#confirm.actions)],

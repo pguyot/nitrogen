@@ -6,6 +6,7 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #validate{}) -> iodata()).
 render_action(TriggerPath, TargetPath, Record) -> 
 	% Initialize a validator for the Target...
 	ValidMessage = wf_utils:js_escape(Record#validate.success_text),

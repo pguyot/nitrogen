@@ -6,5 +6,6 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #script{}) -> iodata()).
 render_action(_TriggerPath, _TargetPath, Record) -> 
 	[wf:me_var(), Record#script.script, ";"].

@@ -6,6 +6,7 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #event{}) -> iodata()).
 render_action(TriggerPath, TargetPath, Record) -> 
 	EventType = Record#event.type, 
 	Postback = make_postback(Record#event.postback, EventType, TriggerPath, TargetPath, Record#event.delegate),

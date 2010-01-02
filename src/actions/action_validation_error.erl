@@ -6,6 +6,7 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action/3::(wf_triggerpath(), wf_targetpath(), #validation_error{}) -> iodata()).
 render_action(TriggerPath, TargetPath, Record) -> 
 	Text = wf_utils:js_escape(Record#validation_error.text),
 	Script = [
