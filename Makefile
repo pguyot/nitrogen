@@ -14,6 +14,7 @@ test: compile
 	erl -noshell \
 		-pa ebin \
 		-pa test/ebin \
+                -pa test/apps \
 		-s test_suite test \
 		-s init stop
 
@@ -25,6 +26,24 @@ coverage: compile
 	erl -noshell \
 		-pa ebin \
 		-pa test/ebin \
+		-pa test/apps \
 		-pa lib/coverize/ebin \
 		-s eunit_helper run_cover \
 		-s init stop
+
+console: compile
+	erl -pa ebin \
+		-pa test/ebin \
+                -pa test/apps
+
+#EXPERIMENTAL - Bug in erl_tidy trashes -spec
+# {test,true} makes this nondestructive
+# change {test,true} to {test,false} for plenty of carnage
+# Do not commit the result - it is very wrong
+tidy: 
+	erl -noshell \
+		-eval 'erl_tidy:dir("./src", [{verbose,true},{test,true},{new_guard_tests,true},{no_imports,true},{keep_unused,true},{backups,true}])' \
+		-eval 'erl_tidy:dir("./test/src", [{verbose,true},{test,true},{new_guard_tests,true},{no_imports,true},{keep_unused,true},{backups,true}])' \
+		-s init stop
+	find ./ -name \*.bak -exec rm {} \;
+

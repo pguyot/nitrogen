@@ -15,7 +15,10 @@ create_project(Name, Dir) ->
     ok.
 
 src_path(Path) ->
-    ModuleDir = filename:dirname(code:which(?MODULE)),
+    %% code:which() returns 'cover_compiled' during coverage analysis
+    %% resulting in errors. code:where_is_file() finds the beam file
+    %% without a problem
+    ModuleDir = filename:dirname(code:where_is_file(atom_to_list(?MODULE) ++ ".beam")),
     filename:join([ModuleDir, "../", Path]).
 
 %% Internal Functions

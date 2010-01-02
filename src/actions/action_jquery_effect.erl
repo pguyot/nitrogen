@@ -6,13 +6,16 @@
 -include ("wf.inc").
 -compile(export_all).
 
+-spec(render_action(TriggerPath::wf_triggerpath(),
+                    TargetPath::wf_targetpath(),
+                    Record::#jquery_effect{}) -> wf_render_action()).
 render_action(_TriggerPath, TargetPath, Record) ->
 	Effect = Record#jquery_effect.effect,
-	Speed = Record#jquery_effect.speed, 
+	Speed = Record#jquery_effect.speed,
 	Options = options_to_js(Record#jquery_effect.options),
 	Class = Record#jquery_effect.class,
 	Easing = Record#jquery_effect.easing,
-	
+
 	Script = case Record#jquery_effect.type of
 		'show' when Effect==none -> wf:f("show();");
 		'hide' when Effect==none -> wf:f("hide();");
@@ -31,24 +34,20 @@ render_action(_TriggerPath, TargetPath, Record) ->
 	JSID = wf:to_js_id(TargetPath),
 	[wf:me_var(), wf:f("jQuery(obj('~s')).~s", [JSID, Script])].
 
-%% Options is a list of {Key,Value} tuples	
+%% Options is a list of {Key,Value} tuples
 options_to_js(Options) ->
 	F = fun({Key, Value}) ->
-		if 
-			is_list(Value) -> 
+		if
+			is_list(Value) ->
 				wf:f("~s: '~s'", [Key, wf_utils:js_escape(Value)]);
 			is_atom(Value) andalso (Value == true orelse Value == false) ->
 				wf:f("~s: ~s", [Key, Value]);
 			is_atom(Value) ->
 				wf:f("~s: '~s'", [Key, Value]);
-			true -> 
+			true ->
 				wf:f("~s: ~p", [Key, Value])
 		end
 	end,
 	Options1 = [F(X) || X <- Options],
 	Options2 = string:join(Options1, ","),
 	wf:f("{ ~s }", [Options2]).
-	
-				
-	
-	

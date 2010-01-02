@@ -8,13 +8,13 @@
 -include("wf.inc").
 
 new_alert_1() ->
-  Record = #alert{text="some_text"},
-  TriggerPath="_trigger_path",
-  TargetPath="_target_path",
-  lists:flatten(action_alert:render_action(TriggerPath,TargetPath, Record)).
+    Record = #alert{text="some_text"},
+    TriggerPath="_trigger_path",
+    TargetPath="_target_path",
+    lists:flatten(action_alert:render_action(TriggerPath,TargetPath, Record)).
 
 basic_test_() ->
-  [?_assertEqual("alert(\"some_text\");", new_alert_1())
-  ].
+    [?_assertEqual("alert(\"some_text\");", new_alert_1())
+    ].
 
 

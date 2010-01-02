@@ -12,6 +12,7 @@ render_validator(TriggerPath, TargetPath, Record) ->
 	wf:f("v.add(Validate.Numericality, { notAnIntegerMessage: \"~s\", onlyInteger: true });", [Text]).
 
 validate(_, Value) -> 
-	try _X = list_to_integer(Value), true
+	try list_to_integer(Value) of
+            _ -> true
 	catch _ : _ -> false
 	end.

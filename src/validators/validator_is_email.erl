@@ -11,6 +11,13 @@ render_validator(TriggerPath, TargetPath, Record)  ->
 	validator_custom:render_validator(TriggerPath, TargetPath, #custom { function=fun validate/2, text = Text, tag=Record }),
 	wf:f("v.add(Validate.Email, { failureMessage: \"~s\" });", [Text]).
 
-validate(_, Value) ->
-	Result = regexp:match(wf:to_list(Value), "([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})"),
-	Result /= nomatch.
+validate(_, Value) when is_list(Value)->
+  EmailRegex = "([^@\\s]+)@((?:[-a-z0-9]+\\.)+[a-z]{2,})",
+  case re:run( wf:to_list(Value), EmailRegex ) of
+    { match, _ } ->
+      true;
+    nomatch ->
+      false
+  end;
+validate(_,_) ->
+  false.

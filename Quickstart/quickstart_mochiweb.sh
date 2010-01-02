@@ -1,9 +1,15 @@
 #!/bin/sh
-export NITROGEN_SRC=..
-export MOCHIWEB_SRC=../http_servers/mochiweb
+
+if [ "$NITROGEN_SRC" = "" ]; then
+        export NITROGEN_SRC=..
+fi
+
+if [ "$MOCHIWEB_SRC" = "" ]; then
+	export MOCHIWEB_SRC=../http_servers/mochiweb
+fi
 cd `dirname $0`
 
-if [[ -d $MOCHIWEB_SRC ]]; then
+if [ -d $MOCHIWEB_SRC ]; then
 	echo "Using Mochiweb in directory $MOCHIWEB_SRC."
 else
 	echo
