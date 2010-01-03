@@ -3,6 +3,7 @@
 
 -ifndef(HAVE_BOOLEAN).
 -type(boolean()            :: true | false).
+-define(HAVE_BOOLEAN, 1).
 -endif.
 -type(wf_actions()         :: tuple() | list()).
 -type(wf_easing()          :: swing | linear).
@@ -13,7 +14,7 @@
 -type(wf_path()            :: me | atom() | string() | [atom()] | [string()]).
 -type(wf_targetpath()      :: wf_path()).
 -type(wf_triggerpath()     :: wf_path()).
--type(wf_id()              :: atom() | string()).
+-type(wf_id()              :: atom() | iodata()).
 
 %%% CONTEXT %%%
 
