@@ -11,7 +11,7 @@
     to_integer/1,
     to_string_list/1,
     encode/2, decode/2,
-    html_encode/1, html_encode/2,
+    html_encode/1, html_encode/2, html_encode_whites/1,
     hex_encode/1, hex_decode/1,
     url_encode/1, url_decode/1,
     js_escape/1
@@ -54,7 +54,7 @@ to_integer(F) when is_float(F) -> round(F).
 
 %% @doc
 %% Convert the following forms into a list of strings...
-%% 	- atom
+%%  - atom
 %%  - [atom, atom, ...]
 %%  - "String"
 %%  - "String, String, ..."
@@ -74,7 +74,9 @@ to_string_list([H|T], Acc) ->
 %%% HTML ENCODE %%%
 
 html_encode(L, false) -> wf:to_list(lists:flatten([L]));
-html_encode(L, true) -> html_encode(wf:to_list(lists:flatten([L]))).	
+html_encode(L, true) -> html_encode(wf:to_list(lists:flatten([L])));
+html_encode(L, whites) -> html_encode_whites(wf:to_list(lists:flatten([L]))).
+
 html_encode([]) -> [];
 html_encode([H|T]) ->
     case H of
@@ -87,6 +89,20 @@ html_encode([H|T]) ->
         $& -> "&amp;" ++ html_encode(T);
         $\n -> "<br>" ++ html_encode(T);
         _ -> [H|html_encode(T)]
+    end.
+
+html_encode_whites([]) -> [];
+html_encode_whites([H|T]) ->
+    case H of
+        $\s -> "&nbsp;" ++ html_encode_whites(T);
+        $\t -> "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ++ html_encode_whites(T);
+        $< -> "&lt;" ++ html_encode_whites(T);
+        $> -> "&gt;" ++ html_encode_whites(T);
+        $" -> "&quot;" ++ html_encode_whites(T);
+        $' -> "&#39;" ++ html_encode_whites(T);
+        $& -> "&amp;" ++ html_encode_whites(T);
+        $\n -> "<br>" ++ html_encode_whites(T);
+        _ -> [H|html_encode_whites(T)]
     end.
 
 %%% HEX ENCODE and HEX DECODE
@@ -106,7 +122,7 @@ encode(Data, Base) when is_list(Data) ->
     {ok, list_to_binary([F(I) || I <- Data])}.
 
 decode(Data, Base) when is_binary(Data) -> decode(binary_to_list(Data), Base);
-decode(Data, Base) when is_list(Data) -> 	
+decode(Data, Base) when is_list(Data) ->
     {ok, list_to_binary(inner_decode(Data, Base))}.
 
 inner_decode(Data, Base) when is_list(Data) ->
