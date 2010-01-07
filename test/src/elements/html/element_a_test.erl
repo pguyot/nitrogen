@@ -31,7 +31,7 @@ basic_test_() ->
    ?_assertEqual("<a id=\"3\" href=\"javascript:\" class=\"link\"/>", new_a_3()),
    ?_assert(eunit_helper:regexpMatch("<a id=\"4\" href=\"javascript:\" class=\"link\"><img id=\".*?\" class=\"image\" src=\"/path/to/image.gif\"/></a>",
                                      new_a_4())),
-   ?_assertEqual("<a id=\"5\" href=\"not_javascript\" class=\"link\">LINK&nbsp;TEXTA LINK BODY</a>", new_a_5()),
+   ?_assertEqual("<a id=\"5\" href=\"not_javascript\" class=\"link\">LINK TEXTA LINK BODY</a>", new_a_5()),
    ?_assertEqual([module,id,actions,show_if,class,style,title,attrs,text,body, html_encode,href,postback],
 	 element_a:reflect())
   ].

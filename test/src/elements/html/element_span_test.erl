@@ -30,7 +30,7 @@ new_span_5() ->
 basic_test_() ->
     [?_assertEqual("<span id=\"1\"/>",new_span_1()),
      ?_assertEqual("<span id=\"2\" class=\"t_span\"/>",new_span_2()),
-     ?_assertEqual("<span id=\"3\" class=\"t_span\" style=\"color: cyan;\">Some&nbsp;Text</span>", new_span_3()),
+     ?_assertEqual("<span id=\"3\" class=\"t_span\" style=\"color: cyan;\">Some Text</span>", new_span_3()),
      ?_assertEqual("<span id=\"4\" class=\"t_span\" lang=\"en\">Hello world!</span>", new_span_4()),
      ?_assert(eunit_helper:regexpMatch("<span id=\"5\" class=\"t_span\"><a id=\".*?\" href=\"/\" class=\"link\" lang=\"en\">English</a></span>", new_span_5())),
      ?_assertEqual([module,id,actions,show_if,class,style,title,attrs,text,body,html_encode],
