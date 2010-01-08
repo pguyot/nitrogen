@@ -18,7 +18,7 @@ render_action(Record)  ->
     wf:f("v.add(Validate.Email, { failureMessage: \"~s\" });", [Text]).
 
 validate(_, Value) ->
-    case re:run(wf:to_list(Value), "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+") of
+    case re:run(wf:to_iodata(Value), "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+") of
         {match, _} -> true;
         _ -> false
     end.

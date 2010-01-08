@@ -36,7 +36,7 @@ render_element(Record) ->
 
 render_rows([], _) -> [];
 render_rows([H|T], N) ->
-    ID = "row" ++ wf:to_list(N),
+    ID = [<<"row">>, wf:to_iodata(N)],
     Placeholder = #placeholder { id=ID, body=H },
     [Placeholder|render_rows(T, N + 1)].
 
@@ -73,7 +73,7 @@ apply_bindings(Bindings, Term) when is_tuple(Term) ->
     Base = wf_utils:get_elementbase(Term),
     TypeModule = Base#elementbase.module,
     Fields = TypeModule:reflect(),
-    ID = wf:to_list(Base#elementbase.id),
+    ID = wf:to_iodata(Base#elementbase.id),
 
     % Do replacements on this term...
     F1 = fun(Binding, Rec) ->

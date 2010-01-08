@@ -74,6 +74,9 @@ depickle(SerializedData, TTLSeconds) ->
 
 
 %%% EXPOSE WF_CONVERT %%%
+to_iodata(T) -> 
+    _IOData = wf_convert:to_iodata(T).
+
 to_list(T) -> 
     _String = wf_convert:to_list(T).
 
