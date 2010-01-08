@@ -10,7 +10,7 @@ reflect() -> record_info(fields, singlerow).
 
 render(ControlID, Record) -> 
 	Terms = #table {
-		class = "singlerow " ++ wf:to_list(Record#singlerow.class),
+		class = [<<"singlerow ">>, wf:to_iodata(Record#singlerow.class)],
 		style = Record#singlerow.style,
 		rows = #tablerow {
 			cells = Record#singlerow.cells

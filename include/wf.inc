@@ -9,7 +9,7 @@
 -type(wf_easing()          :: swing | linear).
 -type(wf_speed()           :: integer()).
 -type(wf_options()         :: list(tuple())).
--type(wf_class()           :: string()|atom()|none).
+-type(wf_class()           :: iodata()|atom()|none).
 -type(wf_postback()        :: string()).
 -type(wf_path()            :: me | atom() | string() | [atom()] | [string()]).
 -type(wf_targetpath()      :: wf_path()).

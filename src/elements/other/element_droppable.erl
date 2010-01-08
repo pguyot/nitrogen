@@ -27,7 +27,7 @@ render(ControlID, Record) ->
 
 	% Render as a panel.
 	element_panel:render(ControlID, #panel {
-		class="droppable " ++ wf:to_list(Record#droppable.class),
+		class=[<<"droppable ">>, wf:to_iodata(Record#droppable.class)],
 		style=Record#droppable.style,
 		body=Record#droppable.body
 	}).

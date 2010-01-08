@@ -37,23 +37,23 @@ render(ControlID, Record) ->
 	end,
 	
 	% Title Color and Font Size...
-	TitleStyle = wf:f("&chts=~s,~b", [wf:to_list(Record#google_chart.color), Record#google_chart.font_size]),
+	TitleStyle = wf:f("&chts=~s,~b", [wf:to_iodata(Record#google_chart.color), Record#google_chart.font_size]),
 	
 	% Size...
 	Size = wf:f("&chs=~bx~b", [Record#google_chart.width, Record#google_chart.height]),
 	
 	% Grid...
 	Grid = wf:f("&chg=~s,~s,~b,~b", [
-		wf:to_list(wf:coalesce([Record#google_chart.grid_x, 0])),
-		wf:to_list(wf:coalesce([Record#google_chart.grid_y, 0])),
+		wf:to_iodata(wf:coalesce([Record#google_chart.grid_x, 0])),
+		wf:to_iodata(wf:coalesce([Record#google_chart.grid_y, 0])),
 		Record#google_chart.grid_line_length,
 		Record#google_chart.grid_blank_length
 	]),
 	
 	% Background Colors...
 	BGColors = wf:f("&chf=bg,s,~s|c,s,~s", [
-		wf:to_list(Record#google_chart.background_color), 
-		wf:to_list(Record#google_chart.chart_color)
+		wf:to_iodata(Record#google_chart.background_color), 
+		wf:to_iodata(Record#google_chart.chart_color)
 	]),
 	
 	% Legend Location...
@@ -118,7 +118,7 @@ render(ControlID, Record) ->
 	
 	% Render the image tag...
 	Image = #image {
-		class="google_chart " ++ wf:to_list(Record#google_chart.class),
+		class=[<<"google_chart ">>, wf:to_iodata(Record#google_chart.class)],
 		style = Record#google_chart.style,
 		image = lists:flatten([Path, Type, Title, TitleStyle, Size, Grid, BGColors, LegendLocation, BarSize, Axes, Data])
 	},
@@ -134,12 +134,12 @@ process_axis(N, Axis) ->
 	end,
 	StringLabels = [wf:to_list(X) || X <- Axis#chart_axis.labels],
 	Labels = integer_to_list(N) ++ ":|" ++ string:join(StringLabels, "|"),
-	Style = wf:f("~b,~s,~b", [N, wf:to_list(Axis#chart_axis.color), Axis#chart_axis.font_size]),
+	Style = wf:f("~b,~s,~b", [N, wf:to_iodata(Axis#chart_axis.color), Axis#chart_axis.font_size]),
 	[Position, Labels, Style].
 	
 process_data(_N, Data) ->
-	Color = wf:to_list(Data#chart_data.color),
-	Legend = wf:to_list(Data#chart_data.legend),
+	Color = wf:to_iodata(Data#chart_data.color),
+	Legend = wf:to_iodata(Data#chart_data.legend),
 	Scale = wf:f("~b,~b", [Data#chart_data.min_value, Data#chart_data.max_value]),
 	StringValues = [wf:to_list(X) || X <- Data#chart_data.values],
 	Values = string:join(StringValues, ","),

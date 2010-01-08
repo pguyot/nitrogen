@@ -14,7 +14,7 @@ render(ControlID, Record) ->
 
 	Term = #textbox {
 	 id          = ControlID,
-	 class       = "datepicker_textbox "  ++ wf:to_list(Class),
+	 class       = [<<"datepicker_textbox ">>, wf:to_iodata(Class)],
 	 style       = Record#datepicker_textbox.style,
 	 text        = Record#datepicker_textbox.text,
 	 html_encode = Record#datepicker_textbox.html_encode

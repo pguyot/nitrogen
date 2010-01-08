@@ -4,12 +4,14 @@
 
 -module (element_span).
 -include ("wf.inc").
--compile(export_all).
+-export([render/2, reflect/0]).
 
+-spec(reflect/0::() -> [atom()]).
 reflect() -> record_info(fields, span).
 
 %%% CODE %%%
 
+-spec(render/2::(wf_id(), #span{}) -> iodata()).
 render(ControlID, Record) -> 
 	Content = [
 		wf:html_encode(Record#span.text, Record#span.html_encode),

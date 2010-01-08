@@ -69,6 +69,7 @@ reverse_bind(BindingTuple, Record) -> wf_bind:reverse_bind(BindingTuple, Record)
 
 %%% EXPOSE WF_CONVERT %%%
 
+to_iodata(T) -> wf_convert:to_iodata(T).
 to_list(T) -> wf_convert:to_list(T).
 to_atom(T) -> wf_convert:to_atom(T).
 to_binary(T) -> wf_convert:to_binary(T).

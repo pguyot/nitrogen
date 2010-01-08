@@ -34,7 +34,7 @@ get_platform() -> yaws.
 
 get_raw_path() ->
 	Arg = wf_platform:get_request(),
-	wf:f("~s?~s", [Arg#arg.server_path, wf:to_list(Arg#arg.querydata)]).
+	wf:f("~s?~s", [Arg#arg.server_path, wf:to_iodata(Arg#arg.querydata)]).
 	
 get_querystring() ->
 	Arg = wf_platform:get_request(),

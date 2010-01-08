@@ -52,7 +52,7 @@ render(ControlID, Record) ->
 
 	% Combine the steps.
 	Terms = #panel {
-		class="wizard " ++ wf:to_list(Record#wizard.class),
+		class=[<<"wizard ">>, wf:to_iodata(Record#wizard.class)],
 		body=[F(X) || X <- StepSeq] 
 	},
 	

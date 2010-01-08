@@ -24,6 +24,7 @@ all_test_() ->
      {module, element_value_test},
 
      {module, element_panel_test},
+     {module, element_template_test},
 
      {module, element_textarea_test},
      {module, validator_confirm_password_test},
@@ -40,5 +41,6 @@ all_test_() ->
      {module, action_confirm_test},
 
      {module, action_jquery_effect_test},
-     {module, wf_platform_test}
+     {module, wf_platform_test},
+     {module, wf_convert_test}
     ].

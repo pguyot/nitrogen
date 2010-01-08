@@ -11,8 +11,8 @@
 ]).
 
 set(Element, Value) ->
-	Element1 = wf:to_list(Element),
-	Value1 = wf_utils:js_escape(wf:to_list(Value)),
+	Element1 = wf:to_iodata(Element),
+	Value1 = wf_utils:js_escape(wf:to_iodata(Value)),
 	Script = wf:f("Nitrogen.$set_value('~s', \"~s\");", [Element1, Value1]),
 	wf:wire(Script).
 	

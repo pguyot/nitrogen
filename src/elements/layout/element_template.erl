@@ -4,7 +4,7 @@
 
 -module (element_template).
 -include ("wf.inc").
--compile(export_all).
+-export([render/2, reflect/0]).
 
 % TODO - Revisit parsing in the to_module_callback. This
 % will currently fail if we encounter a string like:
@@ -12,9 +12,10 @@
 % or 
 % "String with ]]] will fail"
 
-
+-spec(reflect/0::() -> [atom()]).
 reflect() -> record_info(fields, template).
 
+-spec(render/2::(wf_id(), #template{}) -> iodata()).
 render(_ControlID, Record) ->
 	% Prevent loops.
 	case wf:state(template_was_called) of
@@ -43,62 +44,53 @@ render(_ControlID, Record) ->
 	end.
 
 
+%-spec(parse_template/1::(string()) -> [iodata()|script|{atom(), atom(), string()}]).
 parse_template(File) ->
 	File1 = filename:join(nitrogen:get_templateroot(), File),
 	case file:read_file(File1) of
-		{ok, B} -> parse_template1(B);
-		_ -> 
-			?LOG("Error reading file: ~s~n", [File1]),
-			wf:f("File not found: ~s.", [File1])
-	end.
-
-parse_template1(B) ->
-	F = fun(Tag) -> 
-		try 
-			Tag1 = wf:to_list(Tag),
-			to_module_callback(Tag1) 
-		catch _ : _ ->
-			?LOG("Invalid template tag: ~s~n", [Tag])
-		end
-	end,
-	parse(B, F).
-	
+		{ok, B} -> parse(B);
+		{error, Reason} -> 
+			?LOG("Error reading file: ~s (~p)~n", [File1, Reason]),
+			[]
+	end.	
 
 %%% PARSE %%%
 	
-%% parse/2 - Given a binary and a callback, look through the binary
+%% parse/2 - Given a binary, look through the binary
 %% for strings of the form [[[module]]] or [[[module:function(args)]]]
-parse(B, Callback) -> parse(B, Callback, []).
-parse(<<>>, _Callback, Acc) -> [lists:reverse(Acc)];
-parse(<<"[[[", Rest/binary>>, Callback, Acc) -> 
-	{ Token, Rest1 } = get_token(Rest, <<>>),
-	[lists:reverse(Acc), Callback(Token)|parse(Rest1, Callback, [])];
-parse(<<C, Rest/binary>>, Callback, Acc) -> parse(Rest, Callback, [C|Acc]).
-	
-get_token(<<"]]]", Rest/binary>>, Acc) -> { Acc, Rest };
-get_token(<<H, Rest/binary>>, Acc) -> get_token(Rest, <<Acc/binary, H>>).
-
-to_module_callback("script") -> script;
-to_module_callback(Tag) ->
-	% Get the module...
-	{ModuleString, Rest1} = peel(Tag, $:),
-	Module = wf:to_atom(ModuleString),
-	
-	% Get the function...
-	{FunctionString, Rest2} = peel(Rest1, $(),
-	Function = wf:to_atom(FunctionString),
-	
-	{ArgString, Rest3} = peel(Rest2, $)),
-	
-	case Rest3 of
-		[] -> [{Module, Function, ArgString}];
-		_ ->  [{Module, Function, ArgString}|to_module_callback(tl(Rest3))]
-	end.
-
-peel(S, Delim) -> peel(S, Delim, []).
-peel([], _Delim, Acc) -> {lists:reverse(Acc), []};
-peel([Delim|T], Delim, Acc) -> {lists:reverse(Acc), T};
-peel([H|T], Delim, Acc) -> peel(T, Delim, [H|Acc]).
+%% Remark: the previous implementation also allowed placeholders like [[[module:function(args),module:function(args),...]]]
+%% These are not documented and support for those has been removed.
+parse(Binary) ->
+    case re:run(Binary, <<"\\[\\[\\[([a-z0-9_]+)(:([a-z0-9_]+)\\((.*?)\\))?\\]\\]\\]">>, [global]) of
+        nomatch -> [Binary];
+        {match, Captured} ->
+            {_, FinalRest, Parsed} = lists:foldl(fun([{BracketsS, BracketsEnd}, {ModuleLeft, ModuleLen} | FunctionCaptured], {Index, Rest, Acc}) ->
+                NewAcc0 = if
+                    BracketsS =:= 0 -> Acc;
+                    BracketsS > 0 ->
+                        {Left, _} = split_binary(Rest, BracketsS - Index),
+                        [Left | Acc]
+                end,
+                NewIndex = BracketsS + BracketsEnd,
+                {_, NewRest} = split_binary(Rest, NewIndex - Index),
+                {_, PlaceholderModule0} = split_binary(Rest, ModuleLeft - Index),
+                {PlaceholderModuleBin, _} = split_binary(PlaceholderModule0, ModuleLen),
+                PlaceholderModule = wf:to_atom(PlaceholderModuleBin),
+                PlaceholderParsedData = case FunctionCaptured of
+                    [] ->
+                        PlaceholderModule;
+                    [{_FunctionCapturedLeft, _FunctionCapturedLen}, {FunctionLeft, FunctionLen}, {ArgsLeft, ArgsLen}] ->
+                        {_, FunctionStr0} = split_binary(Rest, FunctionLeft - Index),
+                        {FunctionStr, _} = split_binary(FunctionStr0, FunctionLen),
+                        {_, ArgsStr0} = split_binary(Rest, ArgsLeft - Index),
+                        {ArgsStr, _} = split_binary(ArgsStr0, ArgsLen),
+                        Function = wf:to_atom(FunctionStr),
+                        {PlaceholderModule, Function, ArgsStr}
+                end,
+                {NewIndex, NewRest, [PlaceholderParsedData | NewAcc0]}
+            end, {0, Binary, []}, Captured),
+            lists:reverse([FinalRest | Parsed])
+    end.
 
 to_term(X, Bindings) ->
 	S = wf:to_list(X),
@@ -111,15 +103,17 @@ to_term(X, Bindings) ->
 
 %%% EVALUATE %%%
 
-eval([], _) -> [];
-eval([script|T], Record) -> [wf_script:get_script()|eval(T, Record)];
-eval([H|T], Record) when ?IS_STRING(H) -> [H|eval(T, Record)];
-eval([H|T], Record) -> [eval_callbacks(H, Record)|eval(T, Record)].
+eval(List, Record) ->
+    lists:map(fun(Item) ->
+        if
+            Item =:= script -> wf_script:get_script();
+            ?IS_STRING(Item) -> Item;
+            is_binary(Item) -> Item;
+            is_tuple(Item) -> eval_callback(Item, Record)
+        end
+    end, List).
 	
-eval_callbacks([], _) -> [];
-eval_callbacks([H|T], Record) ->
-	{M, Function, ArgString} = H,
-	
+eval_callback({M, Function, ArgString}, Record) ->
 	% De-reference to page module...
 	Module = case M of 
 		page -> wf_platform:get_page_module();
@@ -127,19 +121,22 @@ eval_callbacks([H|T], Record) ->
 	end,
 
 	% Convert args to term...
-	Args = to_term("[" ++ ArgString ++ "].", Record#template.bindings),
+	Args = to_term(["[", ArgString, "]."], Record#template.bindings),
 	
 	code:ensure_loaded(Module),
 	case erlang:function_exported(Module, Function, length(Args)) of
 		false -> 
-			% Function is not defined, so try the next one.
-			eval_callbacks(T, Record);
+			% Function is not defined, return the empty list
+			% (to preserve backward compatibility)
+			% Also log, as it is a bug.
+			?LOG("Error evaluating callback ~p:~p/~p : function not defined~n", [Module, Function, length(Args)]),
+			[];
 			
 		true ->
 			case erlang:apply(Module, Function, Args) of
 				undefined -> 
-					% Function returns undefined, so try the next one.
-					eval_callbacks(T, Record);
+					% Function returns undefined, return the empty list
+					[];
 
 				Data ->
 					% Got some data. Render it if necessary.

@@ -32,9 +32,9 @@ me_var() ->
 
 -spec(render/1::(wf_render_data()) -> iodata()).
 render(undefined) -> "";
-render(Term) when is_binary(Term) -> Term;
-render(Terms=[H|_]) when is_list(Terms), is_integer(H) -> Terms;
-render(Terms) when is_list(Terms) ->[render(X) || X <- Terms];
+render(A) when is_atom(A) -> atom_to_list(A);
+render(B) when is_binary(B) -> B;
+render(L) when ?IS_STRING(L) -> L;
 render(Term) when is_tuple(Term) ->
 	Base = wf_utils:get_elementbase(Term),
 	Module = Base#elementbase.module, 
@@ -68,7 +68,16 @@ render(Term) when is_tuple(Term) ->
 			Html;
 		{_, _} -> []
 	end,
-	Response.
+	Response;
+render(L) when is_list(L) ->
+    render_r(L, []).
+
+render_r([H|T], Acc) ->
+    render_r(T, [render(H)|Acc]);
+render_r([], Acc) ->
+    lists:reverse(Acc);
+render_r(ImproperTail, Acc) ->
+    render_r([], [render(ImproperTail)|Acc]).
 	
 -spec(ensure_rendered/1::(wf_render_data()) -> iodata()).
 ensure_rendered(Terms) ->

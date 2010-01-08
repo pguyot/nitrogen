@@ -14,7 +14,7 @@ render(ControlID, Record) ->
 	
 	% Render the record...
 	element_panel:render(ControlID, #panel {
-		class="radiogroup " ++ wf:to_list(Record#radiogroup.class),
+		class=[<<"radiogroup ">>, wf:to_iodata(Record#radiogroup.class)],
 		style=Record#radiogroup.style,
 		body=Body
 	}).

@@ -13,7 +13,7 @@ render_validator(TriggerPath, TargetPath, Record)  ->
 
 validate(_, Value) when is_list(Value)->
   EmailRegex = "([^@\\s]+)@((?:[-a-z0-9]+\\.)+[a-z]{2,})",
-  case re:run( wf:to_list(Value), EmailRegex ) of
+  case re:run( wf:to_iodata(Value), EmailRegex ) of
     { match, _ } ->
       true;
     nomatch ->

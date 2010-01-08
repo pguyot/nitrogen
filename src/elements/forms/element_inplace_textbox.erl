@@ -28,7 +28,7 @@ render(ControlID, Record) ->
 	% Create the view...
 	Text = Record#inplace_textbox.text,
 	Terms = #panel { 
-		class="inplace_textbox " ++ wf:to_list(Record#inplace_textbox.class),
+		class=[<<"inplace_textbox ">>, wf:to_iodata(Record#inplace_textbox.class)],
 		style=Record#inplace_textbox.style,
 		body = [
 			#panel { id=ViewPanelID, class="view", body=[

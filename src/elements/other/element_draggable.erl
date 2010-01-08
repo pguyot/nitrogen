@@ -43,7 +43,7 @@ render(ControlID, Record) ->
 
 	% Render as a panel...
 	element_panel:render(ControlID, #panel {
-		class="draggable " ++ GroupClasses ++ " " ++ wf:to_list(Record#draggable.class),
+		class=[<<"draggable ">>, GroupClasses, <<" ">>, wf:to_iodata(Record#draggable.class)],
 		style=Record#draggable.style,
 		body=Record#draggable.body
 	}).

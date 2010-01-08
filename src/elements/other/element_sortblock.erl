@@ -28,7 +28,7 @@ render(ControlID, Record) ->
 	wf:wire(Script),
 
 	element_panel:render(ControlID, #panel {
-		class="sortblock " ++ GroupClasses ++ " " ++ wf:to_list(Record#sortblock.class),
+		class=[<<"sortblock ">>, GroupClasses, <<" ">>, wf:to_iodata(Record#sortblock.class)],
 		style=Record#sortblock.style,
 		body=Record#sortblock.items
 	}).
