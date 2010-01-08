@@ -32,6 +32,7 @@ run_module_main(Module) ->
 	catch Type : Msg -> 
 		?LOG("ERROR: ~p~n~p~n~p", [Type, Msg, erlang:get_stacktrace()]),
 		ErrorModule = nitrogen:get_error_module(),
+        wf_platform:set_page_module(ErrorModule),
 		ErrorModule:main()
 	end,
 
