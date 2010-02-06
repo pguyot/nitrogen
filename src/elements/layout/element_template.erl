@@ -92,10 +92,13 @@ parse(Binary) ->
             lists:reverse([FinalRest | Parsed])
     end.
 
-to_term(X, Bindings) ->
+to_term(X, Bindings0) ->
 	S = wf:to_list(X),
 	{ok, Tokens, 1} = erl_scan:string(S),
 	{ok, Exprs} = erl_parse:parse_exprs(Tokens),
+	Bindings = lists:foldl(fun({Key, Value}, Acc) ->
+		erl_eval:add_binding(Key, Value, Acc)
+	end, erl_eval:new_bindings(), Bindings0),
 	{value, Value, _} = erl_eval:exprs(Exprs, Bindings),
 	Value.
 
