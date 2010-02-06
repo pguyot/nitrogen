@@ -6,6 +6,7 @@
 -include ("wf.inc").
 -export ([handle_request/1]).
 
+-spec(handle_request/1::(atom()) -> any()).
 handle_request(Module) ->
 	% Set the initial path...
 	case wf:q(object_id) of
