@@ -40,10 +40,10 @@
 -record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
 -record(windex, {?ELEMENT_BASE(element_windex) }).
 -record(body, {?ELEMENT_BASE(element_body), body=[]}).
--record(h1, {?ELEMENT_BASE(element_h1), text="", html_encode=true}).
--record(h2, {?ELEMENT_BASE(element_h2), text="", html_encode=true}).
--record(h3, {?ELEMENT_BASE(element_h3), text="", html_encode=true}).
--record(h4, {?ELEMENT_BASE(element_h4), text="", html_encode=true}).
+-record(h1, {?ELEMENT_BASE(element_h1), text="", body=[], html_encode=true}).
+-record(h2, {?ELEMENT_BASE(element_h2), text="", body=[], html_encode=true}).
+-record(h3, {?ELEMENT_BASE(element_h3), text="", body=[], html_encode=true}).
+-record(h4, {?ELEMENT_BASE(element_h4), text="", body=[], html_encode=true}).
 -record(list, {?ELEMENT_BASE(element_list), numbered=false, body=[]}).
 -record(listitem, {?ELEMENT_BASE(element_listitem), body=[], text="", html_encode=true}).
 -record(br, {?ELEMENT_BASE(element_br) }).
