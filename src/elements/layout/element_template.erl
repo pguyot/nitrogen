@@ -4,7 +4,9 @@
 
 -module (element_template).
 -include ("wf.inc").
--export([render/2, reflect/0]).
+-export([render/2, reflect/0, parse/1, eval/2]).
+
+-type(parsed_template() :: [script|iodata()|{atom(), atom(), string()}]).
 
 % TODO - Revisit parsing in the to_module_callback. This
 % will currently fail if we encounter a string like:
@@ -33,7 +35,7 @@ render(_ControlID, Record) ->
 	% Template = wf_cache:cache(Key, fun() -> parse_template(File) end, [{ttl, 5}]),
 	
 	% Evaluate the template.
-	Body = eval(Template, Record),
+	Body = eval(Template, Record#template.bindings),
 	
 	IsWindexMode = wf:q(windex) == ["true"],
 	case IsWindexMode of
@@ -44,7 +46,7 @@ render(_ControlID, Record) ->
 	end.
 
 
-%-spec(parse_template/1::(string()) -> [iodata()|script|{atom(), atom(), string()}]).
+-spec(parse_template/1::(string()) -> parsed_template()).
 parse_template(File) ->
 	File1 = filename:join(nitrogen:get_templateroot(), File),
 	case file:read_file(File1) of
@@ -56,10 +58,11 @@ parse_template(File) ->
 
 %%% PARSE %%%
 	
-%% parse/2 - Given a binary, look through the binary
+%% parse/1 - Given a binary, look through the binary
 %% for strings of the form [[[module]]] or [[[module:function(args)]]]
 %% Remark: the previous implementation also allowed placeholders like [[[module:function(args),module:function(args),...]]]
 %% These are not documented and support for those has been removed.
+-spec(parse/1::(binary()) -> parsed_template()).
 parse(Binary) ->
     case re:run(Binary, <<"\\[\\[\\[([a-z0-9_]+)(:([a-z0-9_]+)\\((.*?)\\))?\\]\\]\\]">>, [global]) of
         nomatch -> [Binary];
@@ -92,13 +95,10 @@ parse(Binary) ->
             lists:reverse([FinalRest | Parsed])
     end.
 
-to_term(X, Bindings0) ->
+to_term(X, Bindings) ->
 	S = wf:to_list(X),
 	{ok, Tokens, 1} = erl_scan:string(S),
 	{ok, Exprs} = erl_parse:parse_exprs(Tokens),
-	Bindings = lists:foldl(fun({Key, Value}, Acc) ->
-		erl_eval:add_binding(Key, Value, Acc)
-	end, erl_eval:new_bindings(), Bindings0),
 	{value, Value, _} = erl_eval:exprs(Exprs, Bindings),
 	Value.
 
@@ -106,17 +106,21 @@ to_term(X, Bindings0) ->
 
 %%% EVALUATE %%%
 
-eval(List, Record) ->
+-spec(eval/2::(parsed_template(), [{atom(), any()}]) -> iodata()).
+eval(List, Bindings0) ->
+	Bindings = lists:foldl(fun({Key, Value}, Acc) ->
+		erl_eval:add_binding(Key, Value, Acc)
+	end, erl_eval:new_bindings(), Bindings0),
     lists:map(fun(Item) ->
         if
             Item =:= script -> wf_script:get_script();
             ?IS_STRING(Item) -> Item;
             is_binary(Item) -> Item;
-            is_tuple(Item) -> eval_callback(Item, Record)
+            is_tuple(Item) -> eval_callback(Item, Bindings)
         end
     end, List).
 	
-eval_callback({M, Function, ArgString}, Record) ->
+eval_callback({M, Function, ArgString}, Bindings) ->
 	% De-reference to page module...
 	Module = case M of 
 		page -> wf_platform:get_page_module();
@@ -124,7 +128,7 @@ eval_callback({M, Function, ArgString}, Record) ->
 	end,
 
 	% Convert args to term...
-	Args = to_term(["[", ArgString, "]."], Record#template.bindings),
+	Args = to_term(["[", ArgString, "]."], Bindings),
 	
 	code:ensure_loaded(Module),
 	case erlang:function_exported(Module, Function, length(Args)) of
