@@ -4,7 +4,9 @@
 
 -module (element_template).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_element/1, reflect/0, parse/1, eval/2]).
+
+-type parsed_template() :: [script|iodata()|{atom(), atom(), string()}].
 
 reflect() -> record_info(fields, template).
 
@@ -15,7 +17,7 @@ render_element(Record) ->
     Template = get_cached_template(File),
 
     % Evaluate the template.
-    Body = eval(Template, Record),
+    Body = eval(Template, Record#template.bindings),
     Body.
 
 get_cached_template(File) ->
@@ -56,6 +58,7 @@ get_cached_template(File) ->
             mochiglobal:get(FileAtom)
     end.
 
+-spec parse_template(string()) -> parsed_template().
 parse_template(File) ->
     % TODO - Templateroot
     % File1 = filename:join(nitrogen:get_templateroot(), File),
@@ -73,6 +76,7 @@ parse_template(File) ->
 %% for strings of the form [[[module]]] or [[[module:function(args)]]]
 %% Remark: the previous implementation also allowed placeholders like [[[module:function(args),module:function(args),...]]]
 %% These are not documented and support for those has been removed.
+-spec parse(binary()) -> parsed_template().
 parse(Binary) ->
     case re:run(Binary, <<"\\[\\[\\[([a-z0-9_]+)(:([a-z0-9_]+)\\((.*?)\\))?\\]\\]\\]">>, [global]) of
         nomatch -> [Binary];
@@ -105,13 +109,10 @@ parse(Binary) ->
             lists:reverse([FinalRest | Parsed])
     end.
 
-to_term(X, Bindings0) ->
+to_term(X, Bindings) ->
     S = wf:to_list(X),
     {ok, Tokens, 1} = erl_scan:string(S),
     {ok, Exprs} = erl_parse:parse_exprs(Tokens),
-    Bindings = lists:foldl(fun({Key, Value}, Acc) ->
-        erl_eval:add_binding(Key, Value, Acc)
-    end, erl_eval:new_bindings(), Bindings0),
     {value, Value, _} = erl_eval:exprs(Exprs, Bindings),
     Value.
 
@@ -119,19 +120,22 @@ to_term(X, Bindings0) ->
 
 %%% EVALUATE %%%
 
-eval(List, Record) ->
+-spec eval(parsed_template(), [{atom(), any()}]) -> iodata().
+eval(List, Bindings0) ->
+	Bindings = lists:foldl(fun({Key, Value}, Acc) ->
+		erl_eval:add_binding(Key, Value, Acc)
+	end, erl_eval:new_bindings(), Bindings0),
     lists:map(fun(Item) ->
         if
             Item =:= script -> wf_script:get_script();
             ?IS_STRING(Item) -> Item;
             is_binary(Item) -> Item;
-            is_tuple(Item) -> replace_callback(Item, Record)
+            is_tuple(Item) -> replace_callback(Item, Bindings)
         end
     end, List).
 
 % Turn a callback into a reference to #function_el {}.
-replace_callback({Module, Function, ArgString}, Record) ->
-    Bindings = Record#template.bindings,
+replace_callback({Module, Function, ArgString}, Bindings) ->
     Function = convert_callback_tuple_to_function(Module, Function, ArgString, Bindings),
     #function_el { anchor=page, function=Function }.
 
