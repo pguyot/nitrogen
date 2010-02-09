@@ -27,6 +27,7 @@ all_test_() ->
      {module, element_template_test},
 
      {module, element_textarea_test},
+     {module, element_textbox_test},
      {module, validator_confirm_password_test},
      {module, validator_is_email_test},
      {module, validator_is_integer_test},
