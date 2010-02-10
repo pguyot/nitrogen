@@ -1,14 +1,14 @@
-{"0.20091002.10",
-    [{"0.20091002.9",
+{"0.20091002.11",
+    [{"0.20091002.10",
         [
-            {load_module, element_textbox},
-            {load_module, wf_tags}
+            {load_module, wf_handle},
+            {load_module, wf_platform}
         ]}
         ],
-    [{"0.20091002.9",
+    [{"0.20091002.10",
         [ 
-            {load_module, element_textbox},
-            {load_module, wf_tags}
+            {load_module, wf_handle},
+            {load_module, wf_platform}
         ]} 
     ]
 }.

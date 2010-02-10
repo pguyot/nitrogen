@@ -1,6 +1,6 @@
 {application, nitrogen,
  [{description, "Nitrogen Web Framework"},
-  {vsn, "0.20091002.10"},
+  {vsn, "0.20091002.11"},
   {modules, [
         action_add_class,
         action_alert,

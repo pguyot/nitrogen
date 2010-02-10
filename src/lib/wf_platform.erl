@@ -167,6 +167,7 @@ build_redirect(Url) ->
 	Url1 = wf:to_list(Url),
 	case get_request_method() of
 		'GET' -> build_get_redirect(Url1);
+		'HEAD' -> [];
 		'POST' -> build_post_redirect(Url1)
 	end.
 
