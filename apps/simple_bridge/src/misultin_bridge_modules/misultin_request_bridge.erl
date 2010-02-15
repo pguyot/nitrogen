@@ -39,6 +39,7 @@ headers(Req) ->
     Headers1 = [
         {connection, F('Connection')},
         {accept, F('Accept')},
+        {accept_language, F('Accept-Language')},
         {host, F('Host')},
         {if_modified_since, F('If-Modified-Since')},
         {if_match, F('If-Match')},

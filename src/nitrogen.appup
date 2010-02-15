@@ -1,14 +1,16 @@
-{"0.20091002.10",
-    [{"0.20091002.9",
+{"0.20091002.12",
+    [{"0.20091002.11",
         [
-            {load_module, element_textbox},
-            {load_module, wf_tags}
+            {load_module, wf_platform_inets},
+            {load_module, wf_platform_yaws},
+            {load_module, wf_platform_mochiweb}
         ]}
         ],
-    [{"0.20091002.9",
+    [{"0.20091002.11",
         [ 
-            {load_module, element_textbox},
-            {load_module, wf_tags}
+            {load_module, wf_platform_inets},
+            {load_module, wf_platform_yaws},
+            {load_module, wf_platform_mochiweb}
         ]} 
     ]
 }.
