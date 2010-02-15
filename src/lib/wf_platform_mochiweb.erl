@@ -82,6 +82,7 @@ get_headers() ->
 	[
 		{connection, F("connection")},
 		{accept, F("accept")},
+        {accept_language, F("accept-language")},
 		{host, F("host")},
 		{if_modified_since, F("if-modified-since")},
 		{if_match, F("if-match")},

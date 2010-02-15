@@ -92,6 +92,7 @@ get_headers() ->
 	[
 		{connection, Headers#headers.connection},
 		{accept, Headers#headers.accept},
+%		{accept_language, Headers#headers.accept_language},
 		{host, Headers#headers.host},
 		{if_modified_since, Headers#headers.if_modified_since},
 		{if_match, Headers#headers.if_match},
