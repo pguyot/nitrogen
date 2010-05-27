@@ -95,8 +95,8 @@ html_encode(L) -> html_encode(L, true).
 
 -spec html_encode(iodata(), false | true | whites) -> iodata().
 html_encode(L, false) -> to_iodata(L);
-html_encode(L, true) -> html_encode0(to_iodata(L));
-html_encode(L, whites) -> html_encode_whites0(to_iodata(L)).
+html_encode(L, true) -> iolist_to_binary(html_encode0(to_iodata(L)));
+html_encode(L, whites) -> iolist_to_binary(html_encode_whites0(to_iodata(L))).
 
 html_encode0(IOData) ->
     lists:foldl(fun({RE, Repl}, Acc) ->
