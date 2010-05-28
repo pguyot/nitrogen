@@ -4,8 +4,9 @@
 
 -module (validator_confirm_password).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
+-spec render_action(#confirm_password{}) -> iodata().
 render_action(Record)  ->
     TriggerPath= Record#confirm_password.trigger,
     TargetPath = Record#confirm_password.target,

@@ -4,11 +4,12 @@
 
 -module (validator_is_integer).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
-render_validator(TriggerPath, TargetPath, Record) -> 
+-spec render_action(#is_integer{}) -> iodata().
+render_action(Record) -> 
     Text = wf:js_escape(Record#is_integer.text),
-    validator_custom:render_validator(TriggerPath, TargetPath, #custom { function=fun validate/2, text = Text, tag=Record }),
+    validator_custom:render_action(#custom { function=fun validate/2, text = Text, tag=Record }),
     wf:f("v.add(Validate.Numericality, { notAnIntegerMessage: \"~s\", onlyInteger: true });", [Text]).
 
 validate(_, Value) -> 

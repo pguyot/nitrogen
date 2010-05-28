@@ -4,10 +4,12 @@
 
 -module (element_lightbox).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, lightbox).
 
+-spec render_element(#lightbox{}) -> wf_render_data().
 render_element(Record) -> 
     ?PRINT(Record#lightbox.id),
     Panel = #panel {

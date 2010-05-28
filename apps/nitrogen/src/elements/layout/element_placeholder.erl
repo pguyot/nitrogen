@@ -4,9 +4,11 @@
 
 -module (element_placeholder).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, placeholder).
 
+-spec render_element(#placeholder{}) -> wf_render_data().
 render_element(Record) -> 
     Record#placeholder.body.

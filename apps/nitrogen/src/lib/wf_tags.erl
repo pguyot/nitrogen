@@ -10,6 +10,7 @@
 
 %%%  Empty tags %%%
 
+-spec emit_tag(atom() | iodata(), [{atom() | iodata(), iodata() | atom() | integer() | [atom() | iodata()]}]) -> iodata().
 emit_tag(TagName, Props) ->
     STagName = wf:to_iodata(TagName),
     [
@@ -22,6 +23,7 @@ emit_tag(TagName, Props) ->
 %%% Tags with child content %%%
 
 % empty text and body
+-spec emit_tag(atom() | iodata(), wf_render_data(), [{atom() | iodata(), iodata() | atom() | integer() | [atom() | iodata()]}]) -> wf_render_data().
 emit_tag(TagName, Content, Props) ->
     case is_empty(Content) of
         true when

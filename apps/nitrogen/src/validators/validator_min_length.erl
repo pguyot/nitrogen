@@ -4,8 +4,9 @@
 
 -module (validator_min_length).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
+-spec render_action(#min_length{}) -> iodata().
 render_action(Record)  ->
     TriggerPath= Record#min_length.trigger,
     TargetPath = Record#min_length.target,

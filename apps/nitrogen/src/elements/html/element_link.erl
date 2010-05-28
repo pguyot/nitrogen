@@ -4,10 +4,12 @@
 
 -module (element_link).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, link).
 
+-spec render_element(#link{}) -> wf_render_data().
 render_element(Record) -> 
     ID = Record#link.id,
     Anchor = Record#link.anchor,

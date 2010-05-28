@@ -4,8 +4,9 @@
 
 -module (validator_is_required).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
+-spec render_action(#is_required{}) -> wf_render_action_data().
 render_action(Record) -> 
     TriggerPath = Record#is_required.trigger,
     TargetPath = Record#is_required.target,

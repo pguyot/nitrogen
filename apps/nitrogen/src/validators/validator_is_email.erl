@@ -4,8 +4,9 @@
 
 -module (validator_is_email).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
+-spec render_action(#is_email{}) -> iodata().
 render_action(Record)  ->
     TriggerPath= Record#is_email.trigger,
     TargetPath = Record#is_email.target,

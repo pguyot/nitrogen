@@ -4,12 +4,12 @@
 
 -module (element_li).
 -include ("wf.inc").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
 -spec reflect() -> [atom()].
 reflect() -> record_info(fields, li).
 
--spec render_element(#li{}) -> iodata().
+-spec render_element(#li{}) -> wf_render_data().
 render_element(#li{
     module = ?MODULE,
     id = Id,

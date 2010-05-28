@@ -11,10 +11,12 @@
 
 % Helper function to call a function within a handler.
 % Returns ok or {ok, Value}.
+-spec call(handler_name(), atom()) -> ok | {ok, any()} | {ok, any(), any()}.
 call(Name, FunctionName) -> call(Name, FunctionName, []).
 
 % Helper function to call a function within a handler.
-% Returns ok or {ok, Value}.
+% Returns ok or {ok, Value} or {ok, Value1, Value2}
+-spec call(handler_name(), atom(), [any()]) -> ok | {ok, any()} | {ok, any(), any()}.
 call(Name, FunctionName, Args) ->
     % Get the handler and state from the context. Then, call
     % the function, passing in the Args and State.
@@ -37,8 +39,10 @@ call(Name, FunctionName, Args) ->
             {ok, Value1, Value2}
     end.
 
+-spec call_readonly(handler_name(), atom()) -> any().
 call_readonly(Name, FunctionName) -> call_readonly(Name, FunctionName, []).
 
+-spec call_readonly(handler_name(), atom(), [any()]) -> any().
 call_readonly(Name, FunctionName, Args) ->
     % Get the handler and state from the context. Then, call
     % the function, passing in the Args with State appended.

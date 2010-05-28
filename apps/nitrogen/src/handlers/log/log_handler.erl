@@ -17,6 +17,7 @@
 info(String, Args) -> 
     ok = info(wf:f(String, Args)).
 
+-spec info(string()) -> ok.
 info(String) -> 
     ok = wf_handler:call(log_handler, info, [String]).
 
@@ -26,6 +27,7 @@ info(String) ->
 warning(String, Args) -> 
     ok = warning(wf:f(String, Args)).
 
+-spec warning(string()) -> ok.
 warning(String) -> 
     ok = wf_handler:call(log_handler, warning, [String]).
 
@@ -34,6 +36,7 @@ warning(String) ->
 error(String, Args) -> 
     ok = error(wf:f(String, Args)).
 
+-spec error(string()) -> ok.
 error(String) -> 
     ok = wf_handler:call(log_handler, error, [String]).
 

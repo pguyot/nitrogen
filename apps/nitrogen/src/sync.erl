@@ -3,10 +3,9 @@
 % See MIT-LICENSE for licensing information.
 
 -module (sync).
--export ([go/0, go/1]).
 -include_lib("kernel/include/file.hrl").
 -include_lib ("wf.hrl").
--compile(export_all).
+-export ([go/0, go/1]).
 
 
 
@@ -18,12 +17,14 @@
 
 %% @doc
 %% Same as sync:go([load]).
+-spec go() -> ok | error.
 go() ->
     go([load]).
 
 
 %% @doc
 %% The specified Options are passed into make:all/1.
+-spec go([atom() | {atom(), any()}]) -> ok | error.
 go(Options) -> 
     {ok, BaseDir} = file:get_cwd(),
     SubDirs = get_emakefiles_subdirs(),

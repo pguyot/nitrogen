@@ -8,8 +8,10 @@
 
 -type parsed_template() :: [script|iodata()|{atom(), atom(), string()}].
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, template).
 
+-spec render_element(#template{}) -> iodata().
 render_element(Record) ->
     % Parse the template file...
     

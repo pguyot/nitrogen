@@ -4,10 +4,12 @@
 
 -module (element_list).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, list).
 
+-spec render_element(#list{}) -> wf_render_data().
 render_element(Record) -> 
     Tag = case Record#list.numbered of 
         true -> ol;

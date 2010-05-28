@@ -4,8 +4,9 @@
 
 -module (validator_js_custom).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
+-spec render_action(#js_custom{}) -> iodata().
 render_action(Record) -> 
     Text = wf:js_escape(Record#js_custom.text),
     Function = Record#js_custom.function,

@@ -58,7 +58,7 @@ run_continue_function(Record) ->
             _Type : timeout ->
                 timeout;
             Type : Error ->
-                error_handler:error_msg("Error in continuation function ~p (~p) - ~p : ~p~n", [Fun, Tag, Type, Error]),
+                error_logger:error_msg("Error in continuation function ~p (~p) - ~p : ~p~n", [Fun, Tag, Type, Error]),
                 Self ! {result, error, Ref}
         end
 

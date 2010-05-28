@@ -4,8 +4,9 @@
 
 -module (validator_custom).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([render_action/1]).
 
+-spec render_action(#custom{}) -> [].
 render_action(Record) -> 
     TriggerPath= Record#custom.trigger,
     TargetPath = Record#custom.target,

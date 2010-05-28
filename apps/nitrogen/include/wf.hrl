@@ -36,14 +36,16 @@
 	validation_group % The validation group that should be run when this event is fired.
 }).
 
+-type handler_name() :: atom().
+
 % Handlers Context-
 % Handlers are used to encapsulate Nitrogen's behaviour, and
 % to allow other frameworks to substitute their own behaviour.
 % These are set in wf_context:make_context/1
 -record(handler_context, {
-	name,    % The name of a handler. See wf_context for a list.
-	module,     % A module that provides the logic for a handler. This can be substituted by your app.
-	config,     % The config of the handler, set at the beginning of each request.
+	name :: handler_name(),     % The name of a handler. See wf_context for a list.
+	module :: module(),         % A module that provides the logic for a handler. This can be substituted by your app.
+	config :: any(),            % The config of the handler, set at the beginning of each request.
 	state       % The state of the handler, serialized and maintained between postbacks in a series.
 }).
 

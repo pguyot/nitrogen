@@ -4,12 +4,12 @@
 
 -module (element_img).
 -include ("wf.inc").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
--spec(reflect/0::() -> [atom()]).
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, img).
 
--spec(render_element/1::(#img{}) -> iodata()).
+-spec render_element(#img{}) -> wf_render_data().
 render_element(#img{
     module = ?MODULE,
     id = Id,

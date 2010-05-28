@@ -20,13 +20,16 @@
 
 %%% FORMAT %%%
 
+-spec f(string()) -> string().
 f(S) -> f(S, []).
+-spec f(string(), [any()]) -> string().
 f(S, Args) -> lists:flatten(io_lib:format(S, Args)).
 
 
 %%% IDS %%%
 
 % guid/0 - Return a guid like object.
+-spec guid() -> string().
 guid() ->
     MD5 = erlang:md5(term_to_binary({node(), now(), make_ref()})),
     MD5List = lists:nthtail(8, binary_to_list(MD5)),
@@ -35,6 +38,7 @@ guid() ->
     lists:flatten(L).
 
 % short_guid/0 - Return a shorter guid like object.
+-spec short_guid() -> string().
 short_guid() ->
     MD5 = erlang:md5(term_to_binary({node(), now(), make_ref()})),
     MD5List = lists:nthtail(14, binary_to_list(MD5)),
@@ -42,6 +46,7 @@ short_guid() ->
     L = [F(N) || N <- MD5List],
     lists:flatten(L).
 
+-spec is_process_alive(pid()) -> boolean().
 is_process_alive(Pid) ->
     case is_pid(Pid) of
         true -> 
@@ -82,6 +87,7 @@ path_search([H|T], N, Paths, Pos) ->
 
 %%% STRING REPLACE %%%
 
+-spec replace(string(), string(), string()) -> string().
 replace([], _, _) -> [];
 replace(String, S1, S2) when is_list(String), is_list(S1), is_list(S2) ->
     Length = length(S1),
@@ -95,6 +101,7 @@ replace(String, S1, S2) when is_list(String), is_list(S1), is_list(S2) ->
 
 %%% COALESCE %%%
 
+-spec coalesce([any()]) -> undefined | any().
 coalesce([]) -> undefined;
 coalesce([H]) -> H;
 coalesce([undefined|T]) -> coalesce(T);
@@ -117,6 +124,7 @@ replace_with_base(Base, Record) ->
 
 %%% DEBUG %%%
 
+-spec debug() -> ok.
 debug() ->
     % Get all web and wf modules.
     F = fun(X) ->
@@ -135,4 +143,5 @@ debug() ->
     i:iaa([break]),
     i:ib(?MODULE, break, 0).
 
+-spec break() -> ok.
 break() -> ok.

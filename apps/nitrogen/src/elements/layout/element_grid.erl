@@ -1,9 +1,11 @@
 -module (element_grid).
--compile(export_all).
 -include_lib("wf.hrl").
+-export([reflect/0, render_element/1]).
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, grid).
 
+-spec render_element(wf_grid_element()) -> wf_render_data().
 render_element(#grid_clear {}) ->
     "<div class='clear'></div>\n";
 render_element(Record0)  ->

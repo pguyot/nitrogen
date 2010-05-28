@@ -4,10 +4,12 @@
 
 -module (element_value).
 -include_lib ("wf.hrl").
--compile(export_all).
+-export([reflect/0, render_element/1]).
 
+-spec reflect() -> [atom()].
 reflect() -> record_info(fields, value).
 
+-spec render_element(#value{}) -> iodata().
 render_element(Record) -> 
     Text = wf:html_encode(Record#value.text, Record#value.html_encode),
     wf_tags:emit_tag(span, Text, [
