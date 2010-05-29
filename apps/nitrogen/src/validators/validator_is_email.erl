@@ -6,6 +6,10 @@
 -include_lib ("wf.hrl").
 -export([render_action/1]).
 
+-ifdef(TEST).
+-export([validate/2]).
+-endif.
+
 -spec render_action(#is_email{}) -> iodata().
 render_action(Record)  ->
     TriggerPath= Record#is_email.trigger,

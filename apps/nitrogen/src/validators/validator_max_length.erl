@@ -7,6 +7,10 @@
 -include_lib ("wf.hrl").
 -export([render_action/1]).
 
+-ifdef(TEST).
+-export([validate/2]).
+-endif.
+
 -spec render_action(#max_length{}) -> iodata().
 render_action(Record)  ->
     Text = wf:js_escape(Record#max_length.text),

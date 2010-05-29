@@ -16,6 +16,7 @@
     [
         { i, "./include" },
         { outdir, "./ebin" },
+        { d, 'TEST' },
         debug_info
     ]
 }.
@@ -31,6 +32,20 @@
     [
         { i, "./include" },
         { outdir, "./ebin" },
+        { d, 'TEST' },
+        debug_info
+    ]
+}.
+{
+    [	
+        "./test/src/*",
+        "./test/src/*/*",
+        "./test/src/*/*/*"
+    ], 
+    [
+	    { i, "./include" },
+    	{ outdir, "./test_ebin" },
+        { d, 'TEST' },
         debug_info
     ]
 }.

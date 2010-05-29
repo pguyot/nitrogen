@@ -7,7 +7,11 @@
     call_readonly/3,
     set_handler/2
 ]).
-
+-ifdef(TEST).
+-export([
+    update_handler_state/2
+]).
+-endif.
 
 % Helper function to call a function within a handler.
 % Returns ok or {ok, Value}.

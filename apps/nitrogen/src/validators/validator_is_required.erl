@@ -6,6 +6,10 @@
 -include_lib ("wf.hrl").
 -export([render_action/1]).
 
+-ifdef(TEST).
+-export([validate/2]).
+-endif.
+
 -spec render_action(#is_required{}) -> wf_render_action_data().
 render_action(Record) -> 
     TriggerPath = Record#is_required.trigger,

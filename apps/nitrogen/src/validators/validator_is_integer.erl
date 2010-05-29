@@ -6,6 +6,10 @@
 -include_lib ("wf.hrl").
 -export([render_action/1]).
 
+-ifdef(TEST).
+-export([validate/2]).
+-endif.
+
 -spec render_action(#is_integer{}) -> iodata().
 render_action(Record) -> 
     Text = wf:js_escape(Record#is_integer.text),
