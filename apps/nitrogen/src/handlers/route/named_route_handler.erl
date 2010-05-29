@@ -88,7 +88,7 @@ check_for_404(Module, PathInfo, Path) ->
     case code:ensure_loaded(Module) of
         {module, Module} -> {Module, PathInfo};
         _ ->
-            Web404Module = wf:config_default(web_404_module, web_404),
+            Web404Module = wf:config_default(web_404, web_404),
             case code:ensure_loaded(Web404Module) of
                 {module, Web404Module} -> {Web404Module, Path};
                 _ -> {file_not_found_page, Path}
