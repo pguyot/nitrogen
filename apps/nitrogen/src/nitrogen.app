@@ -134,6 +134,6 @@
         wf_utils,
         wf_validation
     ]},
-    {applications, [kernel, stdlib, sasl, inets, simple_bridge, nprocreg]},
+    {applications, [kernel, stdlib, simple_bridge, nprocreg]},
     {registered, []}
 ]}.
