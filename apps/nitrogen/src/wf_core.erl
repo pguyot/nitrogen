@@ -21,11 +21,17 @@ run() ->
                 Response1 = Response:data(Message),
                 Response1:build_response()
         end
-    catch Type : Error -> 
-        ?LOG("~p~n", [{error, Type, Error, erlang:get_stacktrace()}]),
-        ErrResponse = Response:status_code(500),
-        ErrResponse1 = ErrResponse:data("Internal Server Error"),
-        ErrResponse1:build_response()
+    catch Type : Error ->
+        ?LOG("~p~n", [{Type, Error, erlang:get_stacktrace()}]),
+        try
+            run_error(),
+            finish_dynamic_request()
+        catch RecType : RecError ->
+            ?LOG("~p~n", [{RecType, RecError, erlang:get_stacktrace()}]),
+            ErrResponse = Response:status_code(500),
+            ErrResponse1 = ErrResponse:data(<<"Internal Server Error. Additionally, an internal error occurred while processing error response.">>),
+            ErrResponse1:build_response()
+        end
     end.
 
 run_catched() ->
@@ -178,6 +184,19 @@ run_postback_request() ->
         false -> ok
     end.
 
+%%% 500 ERROR DOCUMENT %%%
+
+run_error() ->
+    Module = wf:config_default(web_error, web_error),
+    Data = case code:ensure_loaded(Module) of
+        {module, Module} ->
+            Module:main();
+        {error, nofile} when Module =:= web_error ->
+            wf:status_code(500),
+            <<"Internal Server Error.">>
+    end,
+    wf_context:data(Data).
+
 %%% BUILD THE RESPONSE %%%
 
 build_static_file_response(Path) ->
@@ -197,8 +216,7 @@ build_first_response(Html, Script) ->
 build_postback_response(Script) ->
     % Update the response bridge and return.
     Response = wf_context:response_bridge(),
-    % TODO - does this need to be flattened?
-    Response1 = Response:data(lists:flatten(Script)),
+    Response1 = Response:data(Script),
     Response1:build_response().
 
 replace(_, _, S) when ?IS_STRING(S) -> S;
