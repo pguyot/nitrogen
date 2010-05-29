@@ -62,7 +62,7 @@ get_cached_template(File) ->
 
 -spec parse_template(string()) -> parsed_template().
 parse_template(File) ->
-    File1 = filename:join(wf:config_default(templateroot, ""), File),
+    File1 = filename:join(wf:config_default(templateroot, "."), File),
 	case file:read_file(File1) of
 		{ok, B} -> parse(B);
 		{error, Reason} -> 
