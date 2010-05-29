@@ -27,10 +27,19 @@ get_value(Key, DefaultValue, Config, State) ->
             throw({nitrogen_error, too_many_matching_values, Key, Values})
     end.
 
-get_values(Key, DefaultValue, _Config, _State) -> 
-    case application:get_env(nitrogen, Key) of
-        {ok, Value} -> 
-            [Value];
-        undefined ->
-            DefaultValue
+get_values(Key, DefaultValues, {Application, Override}, _State) ->
+    get_values0(Key, DefaultValues, Application, Override);
+get_values(Key, DefaultValues, _Config, _State) ->
+    get_values0(Key, DefaultValues, nitrogen, []).
+
+get_values0(Key, DefaultValues, Application, Override) ->
+    case lists:keyfind(Key, 1, Override) of
+        {Key, Value} -> [Value];
+        false ->
+            case application:get_env(Application, Key) of
+                {ok, Value} -> 
+                    [Value];
+                undefined ->
+                    DefaultValues
+            end
     end.
