@@ -2,9 +2,13 @@
 -include ("test.hrl").
 -compile(export_all).
 
+-ifndef(TEST_RSRC_PATH).
+-define(TEST_RSRC_PATH, "data").
+-endif.
+
 make_inets_get_bridge() ->
     % Construct the inets bridge...
-    {ok, [InetsRequest] } = file:consult("data/inets_get_request_data"),
+    {ok, [InetsRequest] } = file:consult(filename:join(?TEST_RSRC_PATH, "inets_get_request_data")),
     {ok, Socket} = gen_tcp:connect(?PEER_IP, ?PEER_PORT, []),
     InetsRequest1 = inject_socket(InetsRequest, Socket),
     InetsBridge = simple_bridge:make_request(inets_request_bridge, InetsRequest1),
@@ -12,7 +16,7 @@ make_inets_get_bridge() ->
 
 make_inets_post_bridge() ->
     % Construct the inets bridge...
-    {ok, [InetsRequest] } = file:consult("data/inets_post_request_data"),
+    {ok, [InetsRequest] } = file:consult(filename:join(?TEST_RSRC_PATH, "inets_post_request_data")),
     {ok, Socket} = gen_tcp:connect(?PEER_IP, ?PEER_PORT, []),
     InetsRequest1 = inject_socket(InetsRequest, Socket),
     InetsBridge = simple_bridge:make_request(inets_request_bridge, InetsRequest1),
