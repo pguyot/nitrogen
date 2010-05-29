@@ -11,7 +11,7 @@
 -spec reflect() -> [atom()].
 reflect() -> record_info(fields, template).
 
--spec render_element(#template{}) -> iodata().
+-spec render_element(#template{}) -> wf_render_data().
 render_element(Record) ->
     % Parse the template file...
     
@@ -62,9 +62,7 @@ get_cached_template(File) ->
 
 -spec parse_template(string()) -> parsed_template().
 parse_template(File) ->
-    % TODO - Templateroot
-    % File1 = filename:join(nitrogen:get_templateroot(), File),
-    File1 = File,
+    File1 = filename:join(wf:config_default(templateroot, ""), File),
 	case file:read_file(File1) of
 		{ok, B} -> parse(B);
 		{error, Reason} -> 
@@ -111,8 +109,8 @@ parse(Binary) ->
             lists:reverse([FinalRest | Parsed])
     end.
 
-to_term(X, Bindings) ->
-    S = wf:to_list(X),
+-spec to_term(string(), [{atom(), any()}]) -> any().
+to_term(S, Bindings) ->
     {ok, Tokens, 1} = erl_scan:string(S),
     {ok, Exprs} = erl_parse:parse_exprs(Tokens),
     {value, Value, _} = erl_eval:exprs(Exprs, Bindings),
@@ -122,14 +120,14 @@ to_term(X, Bindings) ->
 
 %%% EVALUATE %%%
 
--spec eval(parsed_template(), [{atom(), any()}]) -> iodata().
+-spec eval(parsed_template(), [{atom(), any()}]) -> wf_render_data().
 eval(List, Bindings0) ->
 	Bindings = lists:foldl(fun({Key, Value}, Acc) ->
 		erl_eval:add_binding(Key, Value, Acc)
 	end, erl_eval:new_bindings(), Bindings0),
     lists:map(fun(Item) ->
         if
-            Item =:= script -> wf_script:get_script();
+            Item =:= script -> script;
             ?IS_STRING(Item) -> Item;
             is_binary(Item) -> Item;
             is_tuple(Item) -> replace_callback(Item, Bindings)
@@ -138,8 +136,8 @@ eval(List, Bindings0) ->
 
 % Turn a callback into a reference to #function_el {}.
 replace_callback({Module, Function, ArgString}, Bindings) ->
-    Function = convert_callback_tuple_to_function(Module, Function, ArgString, Bindings),
-    #function_el { anchor=page, function=Function }.
+    EvalFunction = convert_callback_tuple_to_function(Module, Function, ArgString, Bindings),
+    #function_el { anchor=page, function=EvalFunction }.
 
 convert_callback_tuple_to_function(Module, Function, ArgString, Bindings) ->
     % De-reference to page module...
@@ -150,7 +148,7 @@ convert_callback_tuple_to_function(Module, Function, ArgString, Bindings) ->
 
     _F = fun() ->
         % Convert args to term...
-        Args = to_term("[" ++ ArgString ++ "].", Bindings),
+        Args = to_term(wf:to_list(["[", ArgString, "]."]), Bindings),
 
         % If the function in exported, then call it. 
         % Otherwise return undefined...
