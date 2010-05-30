@@ -71,6 +71,16 @@ cookie(Cookie, Value, Path, MinutesToLive) ->
 
 %%% TRANSIENT CONTEXT %%%
 
+-spec type() -> wf_context_type().
+type() ->
+    Context = context(),
+    Context#context.type.
+
+-spec type(wf_context_type()) -> #context{}.
+type(Type) ->
+    Context = context(),
+    context(Context#context { type = Type }).
+
 anchor(Anchor) ->
     Context = context(),
     context(Context#context { anchor=Anchor }).
@@ -129,10 +139,12 @@ series_id(SeriesID) ->
     Page = page_context(),
     page_context(Page#page_context { series_id = SeriesID }).
 
+-spec page_module() -> module().
 page_module() -> 
     Page = page_context(),
     Page#page_context.module.
 
+-spec page_module(module()) -> #context{}.
 page_module(Module) ->
     Page = page_context(),
     page_context(Page#page_context { module = Module }).
@@ -156,27 +168,22 @@ async_mode(AsyncMode) ->
 
 %%% EVENT CONTEXT %%%
 
+-spec event_context() -> #event_context{}.
 event_context() ->
     Context = context(),
     Context#context.event_context.
 
+-spec event_context(#event_context{}) -> #context{}.
 event_context(EventContext) ->
     Context = context(),
     context(Context#context { event_context = EventContext }).
 
-
-type() ->
-    Context = context(),
-    Context#context.type.
-
-type(Type) -> % either first_request, postback_request, or static_file
-    Context = context(),
-    context(Context#context { type = Type }).
-
+-spec event_module() -> module().
 event_module() ->
     Event = event_context(),
     Event#event_context.module.
 
+-spec event_module(module()) -> #context{}.
 event_module(Module) ->
     Event = event_context(),
     event_context(Event#event_context { module = Module }).

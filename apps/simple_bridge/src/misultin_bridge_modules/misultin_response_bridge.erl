@@ -18,7 +18,9 @@ build_response(Req, Res) ->
             % Send the misultin response...
             Req:respond(Code, Headers, Body);
         {file, Path} ->
-            Req:file([Path])
+            Req:file([Path]);
+        {file, Path, Root} ->
+            Req:file([filename:join(Root, Path)])
     end.
 
 create_cookie_header(Cookie) ->

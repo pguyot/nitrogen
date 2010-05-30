@@ -48,14 +48,18 @@ run_catched() ->
 
     % Call the module...
     case wf_context:type() of
-        first_request    -> 
+        first_request -> 
             run_first_request(), 
             finish_dynamic_request();
         postback_request -> 
             run_postback_request(), 
             finish_dynamic_request();
-        static_file      -> 
-            finish_static_request()
+        static_file -> 
+            finish_static_request();
+        {static_file, DocRoot} -> 
+            finish_static_request(DocRoot);
+        {redirect, Code} -> 
+            finish_redirect_request(Code)
     end.
 
 finish_dynamic_request() ->
@@ -85,6 +89,14 @@ finish_dynamic_request() ->
 finish_static_request() ->
     Path = wf_context:path_info(),
     build_static_file_response(Path).
+
+finish_static_request(DocRoot) ->
+    Path = wf_context:path_info(),
+    build_static_file_response(Path, DocRoot).
+
+finish_redirect_request(Code) ->
+    Path = wf_context:path_info(),
+    build_redirect_response(Code, Path).
 
 %%% SERIALIZE AND DESERIALIZE STATE %%%
 
@@ -203,6 +215,18 @@ build_static_file_response(Path) ->
     Response = wf_context:response_bridge(),
     Response1 = Response:file(Path),
     Response1:build_response().
+
+build_static_file_response(Path, DocRoot) ->
+    Response = wf_context:response_bridge(),
+    Response1 = Response:file(Path, DocRoot),
+    Response1:build_response().
+
+build_redirect_response(Code, Path) ->
+    Response = wf_context:response_bridge(),
+    Response1 = Response:status_code(Code),
+    Response2 = Response1:header("Location", Path),
+    Response3 = Response2:data([]),
+    Response3:build_response().
 
 build_first_response(Html, Script) ->
     % Update the output with any script...

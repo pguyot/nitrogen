@@ -93,6 +93,7 @@
         element_ul,
         element_upload,
         element_value,
+        extended_route_handler,
         file_not_found_page,
         http_basic_auth_security_handler,
         identity_handler,

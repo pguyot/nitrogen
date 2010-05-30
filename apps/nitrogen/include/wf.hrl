@@ -2,21 +2,28 @@
 -define(wf_inc, ok).
 
 -ifndef(HAVE_BOOLEAN).
--type(boolean()            :: true | false).
+-type boolean()            :: true | false.
 -define(HAVE_BOOLEAN, 1).
 -endif.
--type(wf_actions()         :: tuple() | list()).
--type(wf_easing()          :: swing | linear).
--type(wf_speed()           :: integer()).
--type(wf_options()         :: list(tuple())).
--type(wf_class()           :: iodata() | atom() | [any()]).
--type(wf_postback()        :: string()).
--type(wf_path()            :: me | atom() | string() | [atom()] | [string()]).
--type(wf_targetpath()      :: wf_path()).
--type(wf_triggerpath()     :: wf_path()).
--type(wf_id()              :: atom() | iodata()).
+-type wf_actions()         :: tuple() | list().
+-type wf_easing()          :: swing | linear.
+-type wf_speed()           :: integer().
+-type wf_options()         :: list(tuple()).
+-type wf_class()           :: iodata() | atom() | [any()].
+-type wf_postback()        :: string().
+-type wf_path()            :: me | atom() | string() | [atom()] | [string()].
+-type wf_targetpath()      :: wf_path().
+-type wf_triggerpath()     :: wf_path().
+-type wf_id()              :: atom() | iodata().
 
 %%% CONTEXT %%%
+
+-type wf_context_type() ::
+        first_request
+    |   postback_request
+    |   static_file
+    |   {static_file, string()}
+    |   {redirect, integer()}.
 
 % Page Request Information.
 -record(page_context, {
@@ -29,7 +36,7 @@
 % Event Information. A serialized version of this record
 % is sent by the browser when an event is called.
 -record(event_context, {
-  module,     % The module that should handle the event
+  module :: module(),     % The module that should handle the event
   tag,        % An Erlang term that is passed along with the event
   type,       % The type of event postback, comet, continuation, upload
 	anchor,     % The element id to which trigger and target are relative.
@@ -51,7 +58,7 @@
 
 -record(context, {
 	% Transient Information
-	type,                % Either first_request, postback_request, or static_file
+	type :: wf_context_type(),
 	request_bridge,      % Holds the simple_bridge request object
 	response_bridge,     % Holds the simple_bridge response object
 	anchor=undefined,    % Holds the unique ID of the current anchor element.

@@ -27,13 +27,23 @@ update_context_with_event() ->
     PageModule = wf_context:page_module(),
     IsPostback = is_record(Event, event_context),
     case {PageModule, IsPostback} of
-        {static_file, _} -> update_context_for_static_file();
-        {_, false}       -> update_context_for_first_request();
-        {_, true}        -> update_context_for_postback_request(Event)
+        {static_file, _}            -> update_context_for_static_file();
+        {{static_file, DocRoot}, _} -> update_context_for_static_file(DocRoot);
+        {{redirect, Code}, _}       -> update_context_for_redirect(Code);
+        {_, false}                  -> update_context_for_first_request();
+        {_, true}                   -> update_context_for_postback_request(Event)
     end.
 
 update_context_for_static_file() ->
     wf_context:type(static_file),
+    ok.
+
+update_context_for_static_file(DocRoot) ->
+    wf_context:type({static_file, DocRoot}),
+    ok.
+
+update_context_for_redirect(Code) ->
+    wf_context:type({redirect, Code}),
     ok.
 
 update_context_for_first_request() ->

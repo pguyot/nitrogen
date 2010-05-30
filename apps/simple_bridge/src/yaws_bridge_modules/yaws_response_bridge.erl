@@ -36,16 +36,9 @@ build_response(_Arg, Res) ->
             ]);
 
         {file, Path} ->
-            %% Calculate expire date far into future...
-            Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
-            TenYears = 10 * 365 * 24 * 60 * 60,
-            Seconds1 = calendar:gregorian_seconds_to_datetime(Seconds + TenYears),
-            ExpireDate = httpd_util:rfc1123_date(Seconds1),
-
-            % Create the response telling Yaws to server file...
-            Options = [{header, {"Expires", ExpireDate}}],
-            Path = filename:join(".", Path),
-            {page, {Options, Path}}
+            serve_file(Path, ".");
+        {file, Path, Root} ->
+            serve_file(Path, Root)
     end.
 
 coalesce([]) -> undefined;
@@ -64,3 +57,15 @@ to_cookie_expire(SecondsToLive) ->
     Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
     DateTime = calendar:gregorian_seconds_to_datetime(Seconds + SecondsToLive),
     httpd_util:rfc1123_date(DateTime).
+
+serve_file(Path, DocRoot) ->
+    %% Calculate expire date far into future...
+    Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
+    TenYears = 10 * 365 * 24 * 60 * 60,
+    Seconds1 = calendar:gregorian_seconds_to_datetime(Seconds + TenYears),
+    ExpireDate = httpd_util:rfc1123_date(Seconds1),
+
+    % Create the response telling Yaws to server file...
+    Options = [{header, {"Expires", ExpireDate}}],
+    Path = filename:join(DocRoot, Path),
+    {page, {Options, Path}}.
