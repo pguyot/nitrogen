@@ -19,8 +19,12 @@ build_response(Req, Res) ->
             Req:respond(Code, Headers, Body);
         {file, Path} ->
             Req:file([Path]);
-        {file, Path, Root} ->
-            Req:file([filename:join(Root, Path)])
+        {file, Path0, Options} ->
+            Path = case proplists:get_value(docroot, Options) of
+                undefined -> Path0;
+                DocRoot -> filename:join(DocRoot, Path0)
+            end,
+            Req:file([Path])
     end.
 
 create_cookie_header(Cookie) ->

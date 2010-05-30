@@ -15,7 +15,7 @@
 -type route() ::
             {string(), module()}
         |   {string(), static_file}
-        |   {string(), static_file, string()}
+        |   {string(), static_file, [atom() | {atom(), any()}]}
         |   {string(), redirect, string()}
         |   {string(), redirect, string(), redirect_status()}.
 
@@ -25,13 +25,13 @@
 
 %% @doc
 %% The extended route handler is an extension of the named route handler.
-%% It allows redirections and static files to a specific document root.
+%% It allows redirections and static files with options.
 %%
 %% Here is a usage example:
 %%
 %% &lt;pre&gt;
 %%	wf_handler:set_handler(extended_route_handler, [
-%%        {"/downloads", static_file, "/path/to/downloads"},
+%%        {"/downloads", static_file, [{docroot, "/path/to/downloads"}, {expires, never}]},
 %%        {"/static/(.+)$", redirect, "/\\1"},
 %%        {"^.*/moved/path(.+)$", redirect, "http://otherserver.com/\\1", permanent},
 %%
@@ -84,8 +84,8 @@ route(Path, Routes) ->
     case resolve_route(Path, Routes) of
         {static_file, StaticFilePath} ->
             {static_file, StaticFilePath};
-        {static_file, DocRoot, StaticFilePath} ->
-            {{static_file, DocRoot}, StaticFilePath};
+        {static_file, Options, StaticFilePath} ->
+            {{static_file, Options}, StaticFilePath};
         {module, Module, SubPath} ->
             case code:ensure_loaded(Module) of
                 {module, Module} ->
@@ -122,11 +122,11 @@ resolve(Path, {Prefix, Module}) ->
             {value, {module, Module, Suffix}};
         false -> false
     end;
-resolve(Path, {Path, static_file, DocRoot}) -> {value, {static_file, DocRoot, []}};
-resolve(Path, {Prefix, static_file, DocRoot}) ->
+resolve(Path, {Path, static_file, Options}) -> {value, {static_file, Options, []}};
+resolve(Path, {Prefix, static_file, Options}) ->
     case extract_suffix(Path, Prefix) of
         {value, Suffix} ->
-            {value, {static_file, DocRoot, Suffix}};
+            {value, {static_file, Options, Suffix}};
         false -> false
     end;
 resolve(_Path, {Regex, redirect, Replacement}) ->

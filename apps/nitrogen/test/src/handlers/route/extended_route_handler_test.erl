@@ -29,9 +29,9 @@ simple_static_file_test() ->
 docroot_static_file_test() ->
     wf_context:init_context({?MODULE, "/downloads/foo"}, mock_response_bridge),
     extended_route_handler:init([
-        {"/downloads", static_file, "/path/to/downloads"}
+        {"/downloads", static_file, [{docroot, "/path/to/downloads"}]}
     ], state),
-    ?assertEqual({static_file, "/path/to/downloads"}, wf_context:page_module()),
+    ?assertEqual({static_file, [{docroot, "/path/to/downloads"}]}, wf_context:page_module()),
     ?assertEqual("/foo", wf_context:path_info()).
 
 do_not_match_any_prefix_test() ->

@@ -36,9 +36,9 @@ build_response(_Arg, Res) ->
             ]);
 
         {file, Path} ->
-            serve_file(Path, ".");
-        {file, Path, Root} ->
-            serve_file(Path, Root)
+            serve_file(Path, []);
+        {file, Path, Options} ->
+            serve_file(Path, Options)
     end.
 
 coalesce([]) -> undefined;
@@ -58,14 +58,9 @@ to_cookie_expire(SecondsToLive) ->
     DateTime = calendar:gregorian_seconds_to_datetime(Seconds + SecondsToLive),
     httpd_util:rfc1123_date(DateTime).
 
-serve_file(Path, DocRoot) ->
-    %% Calculate expire date far into future...
-    Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
-    TenYears = 10 * 365 * 24 * 60 * 60,
-    Seconds1 = calendar:gregorian_seconds_to_datetime(Seconds + TenYears),
-    ExpireDate = httpd_util:rfc1123_date(Seconds1),
-
-    % Create the response telling Yaws to server file...
-    Options = [{header, {"Expires", ExpireDate}}],
+serve_file(Path, Options) ->
+    Headers = simple_bridge_response:serve_file_headers(Path, Options),
+    YawsHeaders = [{header, HeaderTuple} || HeaderTuple <- Headers],
+    DocRoot = proplists:get_value(docroot, Options, "."),
     Path = filename:join(DocRoot, Path),
-    {page, {Options, Path}}.
+    {page, {YawsHeaders, Path}}.

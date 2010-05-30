@@ -45,8 +45,8 @@ file(Path) ->
     Res1 = Res#response { data={file, Path} },
     ?MODULE:new(Mod, Req, Res1).
 
-file(Path, Root) ->
-    Res1 = Res#response { data={file, Path, Root} },
+file(Path, Options) ->
+    Res1 = Res#response { data={file, Path, Options} },
     ?MODULE:new(Mod, Req, Res1).
 
 build_response() -> Mod:build_response(Req, Res).

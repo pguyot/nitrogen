@@ -22,7 +22,7 @@
         first_request
     |   postback_request
     |   static_file
-    |   {static_file, string()}
+    |   {static_file, [atom() | {atom(), any()}]}
     |   {redirect, integer()}.
 
 % Page Request Information.

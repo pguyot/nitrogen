@@ -19,10 +19,14 @@ build_response({Req, DocRoot}, Res) ->
 
             % Send the mochiweb response...
             Req:respond({Code, Headers, Body});
-        {file, Path, Root} ->
-            serve_file(Req, Path, Root);
+        {file, Path, Options0} ->
+            Options = case proplists:is_defined(docroot, Options0) of
+                true -> Options0;
+                false -> [{docroot, DocRoot} | Options0]
+            end,
+            serve_file(Req, Path, Options);
         {file, Path} ->
-            serve_file(Req, Path, DocRoot)
+            serve_file(Req, Path, [{docroot, DocRoot}])
     end.
 
 create_cookie_header(Cookie) ->
@@ -32,13 +36,7 @@ create_cookie_header(Cookie) ->
     Path = Cookie#cookie.path,
     mochiweb_cookies:cookie(Name, Value, [{path, Path}, {max_age, SecondsToLive}]).
 
-serve_file(Req, Path, DocRoot) ->
-    %% Calculate expire date far into future...
-    Seconds = calendar:datetime_to_gregorian_seconds(calendar:local_time()),
-    TenYears = 10 * 365 * 24 * 60 * 60,
-    Seconds1 = calendar:gregorian_seconds_to_datetime(Seconds + TenYears),
-    ExpireDate = httpd_util:rfc1123_date(Seconds1),
-
-    %% Create the response telling Mochiweb to serve the file...
-    Headers = [{"Expires", ExpireDate}],
+serve_file(Req, Path, Options) ->
+    Headers = simple_bridge_response:serve_file_headers(Path, Options),
+    DocRoot = proplists:get_value(docroot, Options),
     Req:serve_file(tl(Path), DocRoot, Headers).

@@ -27,6 +27,9 @@ build_response(Req, Res) ->
             ]};
 
         {file, _Path} ->
+            mod_get:do(Req);
+
+        {file, _Path, _Options} ->
             mod_get:do(Req)
     end.
 
