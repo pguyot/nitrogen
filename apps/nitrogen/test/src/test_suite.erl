@@ -41,5 +41,7 @@ all_test_() ->
      {module, action_confirm_test},
      {module, action_jquery_effect_test},
      
-     {module, wf_convert_test}
+     {module, wf_convert_test},
+     
+     {module, named_route_handler_test}
     ].
