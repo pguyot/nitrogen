@@ -23,12 +23,14 @@ render_element(Record) ->
     Body.
 
 get_cached_template(File) ->
-    FileAtom = list_to_atom("template_file_" ++ File),
+    RelPath = filename:join(wf:config_default(templateroot, "."), File),
+    FullPath = filename:absname(RelPath),
+    FileAtom = list_to_atom("template_file_" ++ FullPath),
 
-    LastModAtom = list_to_atom("template_lastmod_" ++ File),
+    LastModAtom = list_to_atom("template_lastmod_" ++ FullPath),
     LastMod = mochiglobal:get(LastModAtom),
 
-    CacheTimeAtom = list_to_atom("template_cachetime_" ++ File),
+    CacheTimeAtom = list_to_atom("template_cachetime_" ++ FullPath),
     CacheTime = mochiglobal:get(CacheTimeAtom),
     
     %% Check for recache if one second has passed since last cache time...
