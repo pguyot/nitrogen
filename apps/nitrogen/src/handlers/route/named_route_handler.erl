@@ -44,9 +44,12 @@ init(Routes, State) ->
     Path = RequestBridge:path(),
 
     % Match to the longest possible route.
-    {Module, PathInfo} = route(Path, Routes),
-    {Module1, PathInfo1} = check_for_404(Module, PathInfo, Path),
-    wf_context:page_module(Module1),
+    {ModuleOrStaticFile, PathInfo} = route(Path, Routes),
+    {ModuleOrStaticFile1, PathInfo1} = check_for_404(ModuleOrStaticFile, PathInfo, Path),
+    case ModuleOrStaticFile1 of
+        static_file -> wf_context:type(static_file);
+        Module1 -> wf_context:page_module(Module1)
+    end,
     wf_context:path_info(PathInfo1),
     {ok, State}.
 

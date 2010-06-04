@@ -90,13 +90,13 @@ finish_static_request() ->
     Path = wf_context:path_info(),
     build_static_file_response(Path).
 
-finish_static_request(DocRoot) ->
+finish_static_request(Options) ->
     Path = wf_context:path_info(),
-    build_static_file_response(Path, DocRoot).
+    build_static_file_response(Path, Options).
 
-finish_redirect_request(Code) ->
+finish_redirect_request(RedirectStatus) ->
     Path = wf_context:path_info(),
-    build_redirect_response(Code, Path).
+    build_redirect_response(RedirectStatus, Path).
 
 %%% SERIALIZE AND DESERIALIZE STATE %%%
 
@@ -211,18 +211,22 @@ run_error() ->
 
 %%% BUILD THE RESPONSE %%%
 
+-spec build_static_file_response(string()) -> any().
 build_static_file_response(Path) ->
     Response = wf_context:response_bridge(),
     Response1 = Response:file(Path),
     Response1:build_response().
 
-build_static_file_response(Path, DocRoot) ->
+-spec build_static_file_response(string(), [atom() | {atom(), any()}]) -> any().
+build_static_file_response(Path, Options) ->
     Response = wf_context:response_bridge(),
-    Response1 = Response:file(Path, DocRoot),
+    Response1 = Response:file(Path, Options),
     Response1:build_response().
 
-build_redirect_response(Code, Path) ->
+-spec build_redirect_response(wf_redirect_status(), string()) -> any().
+build_redirect_response(RedirectStatus, Path) ->
     Response = wf_context:response_bridge(),
+    Code = wf_convert:redirect_status_to_code(RedirectStatus),
     Response1 = Response:status_code(Code),
     Response2 = Response1:header("Location", Path),
     Response3 = Response2:data([]),

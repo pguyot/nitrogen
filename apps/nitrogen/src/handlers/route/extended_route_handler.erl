@@ -69,8 +69,11 @@ init(Routes, State) ->
     RequestBridge = wf_context:request_bridge(),
     Path = RequestBridge:path(),
 
-    {PageModule, PathInfo} = route(Path, Routes),
-    wf_context:page_module(PageModule),
+    {RequestRoute, PathInfo} = route(Path, Routes),
+    case RequestRoute of
+        {page_module, PageModule} -> wf_context:page_module(PageModule);
+        ContextType -> wf_context:type(ContextType)
+    end,
     wf_context:path_info(PathInfo),
     {ok, State}.
 
@@ -79,6 +82,7 @@ finish(_Config, State) ->
 
 %%% PRIVATE FUNCTIONS %%%
 
+-spec route(string(), [route()]) -> {{page_module, module()} | wf_context_type(), string()}.
 route(Path, Routes) ->
     case resolve_route(Path, Routes) of
         {static_file, StaticFilePath} ->
@@ -88,9 +92,9 @@ route(Path, Routes) ->
         {module, Module, SubPath} ->
             case code:ensure_loaded(Module) of
                 {module, Module} ->
-                    {Module, SubPath};
+                    {{page_module, Module}, SubPath};
                 _ ->
-                    {get_404_module(), Path}
+                    {{page_module, get_404_module()}, Path}
             end;
         {redirect, Code, RedirectURI} ->
             {{redirect, Code}, RedirectURI}
@@ -141,8 +145,7 @@ resolve_redirect(RedirectStatus, Regex, Replacement) ->
     case re:run(URI, RegexC, [{capture, none}]) of
         match ->
             RedirectURI = re:replace(URI, RegexC, Replacement, [{return, list}]),
-            Code = wf_convert:redirect_status_to_code(RedirectStatus),
-            {value, {redirect, Code, RedirectURI}};
+            {value, {redirect, RedirectStatus, RedirectURI}};
         nomatch -> false
     end.
 

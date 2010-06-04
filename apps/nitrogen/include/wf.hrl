@@ -25,24 +25,24 @@
     |   postback_request
     |   static_file
     |   {static_file, [atom() | {atom(), any()}]}
-    |   {redirect, integer()}.
+    |   {redirect, wf_redirect_status()}.  % redirect URL/Path is in wf_context:path_info()
 
 % Page Request Information.
 -record(page_context, {
-	series_id,   % A unique ID assigned to the first request which stays constant on repeated requests.
-	module,      % The requested page module
-	path_info,   % Any extra info passed with the request
-	async_mode= comet % {poll, Interval} or comet 
+	series_id,                                      % A unique ID assigned to the first request which stays constant on repeated requests.
+	module = undefined :: module() | undefined,     % The requested page module
+	path_info,                                      % Any extra info passed with the request
+	async_mode = comet                              % {poll, Interval} or comet 
 }).
 
 % Event Information. A serialized version of this record
 % is sent by the browser when an event is called.
 -record(event_context, {
-  module :: module(),     % The module that should handle the event
-  tag,        % An Erlang term that is passed along with the event
-  type,       % The type of event postback, comet, continuation, upload
-	anchor,     % The element id to which trigger and target are relative.
-	validation_group % The validation group that should be run when this event is fired.
+    module = undefined :: module() | undefined,     % The module that should handle the event
+    tag,        % An Erlang term that is passed along with the event
+    type,       % The type of event postback, comet, continuation, upload
+    anchor,     % The element id to which trigger and target are relative.
+    validation_group % The validation group that should be run when this event is fired.
 }).
 
 -type handler_name() :: atom().
@@ -60,7 +60,7 @@
 
 -record(context, {
 	% Transient Information
-	type :: wf_context_type(),
+	type = first_request :: wf_context_type(),  % request type, set by the handlers init functions and determines how to handle the request.
 	request_bridge,      % Holds the simple_bridge request object
 	response_bridge,     % Holds the simple_bridge response object
 	anchor=undefined,    % Holds the unique ID of the current anchor element.
@@ -204,7 +204,7 @@
 -record(api, {?ACTION_BASE(action_api), name, tag, delegate }).
 -record(function, {?ACTION_BASE(action_function), function }).
 -record(set, {?ACTION_BASE(action_set), value}).
--record(redirect, {?ACTION_BASE(action_redirect), url}).
+-record(redirect, {?ACTION_BASE(action_redirect), url, code = temp :: wf_redirect_status()}).
 -record(event, {?ACTION_BASE(action_event), type=default, keycode=undefined, delay=0, postback, validation_group, delegate, extra_param}).
 -record(validate, {?ACTION_BASE(action_validate), on=submit, success_text=" ", group, validators, attach_to }).
 -record(validation_error, {?ACTION_BASE(action_validation_error), text="" }).

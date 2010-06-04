@@ -24,26 +24,23 @@ update_context_with_event() ->
     Event = wf_pickle:depickle(SerializedEvent),
 
     % Update the Context...
-    PageModule = wf_context:page_module(),
+    InitialType = wf_context:type(),
     IsPostback = is_record(Event, event_context),
-    case {PageModule, IsPostback} of
+    case {InitialType, IsPostback} of
+        {first_request, false}      -> update_context_for_first_request();
+        {first_request, true}       -> update_context_for_postback_request(Event);
         {static_file, _}            -> update_context_for_static_file();
-        {{static_file, DocRoot}, _} -> update_context_for_static_file(DocRoot);
-        {{redirect, Code}, _}       -> update_context_for_redirect(Code);
-        {_, false}                  -> update_context_for_first_request();
-        {_, true}                   -> update_context_for_postback_request(Event)
+        {{static_file, Options}, _} -> update_context_for_static_file(Options);
+        {{redirect, Code}, _}       -> update_context_for_redirect(Code)
     end.
 
 update_context_for_static_file() ->
-    wf_context:type(static_file),
     ok.
 
-update_context_for_static_file(DocRoot) ->
-    wf_context:type({static_file, DocRoot}),
+update_context_for_static_file(_Options) ->
     ok.
 
-update_context_for_redirect(Code) ->
-    wf_context:type({redirect, Code}),
+update_context_for_redirect(_Code) ->
     ok.
 
 update_context_for_first_request() ->
