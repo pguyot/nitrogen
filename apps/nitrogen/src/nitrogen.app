@@ -98,7 +98,6 @@
         http_basic_auth_security_handler,
         identity_handler,
         log_handler,
-        mochiglobal,
         named_route_handler,
         nitrogen,
         nitrogen_dev,
@@ -135,6 +134,6 @@
         wf_utils,
         wf_validation
     ]},
-    {applications, [kernel, stdlib, simple_bridge, nprocreg]},
+    {applications, [kernel, stdlib, simple_bridge, mochiweb, nprocreg]},
     {registered, []}
 ]}.
