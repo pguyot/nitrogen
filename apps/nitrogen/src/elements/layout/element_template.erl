@@ -18,6 +18,9 @@ render_element(Record) ->
     File = wf:to_list(Record#template.file),
     Template = get_cached_template(File),
 
+    % Set the content type (this can be overridden in evaluations)
+    wf:content_type(Record#template.mime_type),
+
     % Evaluate the template.
     Body = eval(Template, Record#template.bindings),
     Body.

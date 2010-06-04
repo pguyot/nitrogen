@@ -92,7 +92,7 @@
 %% Other attributes should be encoded in a attrs proplist.
 -define(ELEMENT_BASE(Module), is_element=is_element, module=Module :: atom(), id::undefined | wf_id(), anchor, actions::undefined | wf_actions(), show_if=true ::boolean(), class=""::wf_class(), style=""::iodata(), title=""::undefined | iodata(), attrs=[]).
 -record(elementbase, {?ELEMENT_BASE(undefined)}).
--record(template, {?ELEMENT_BASE(element_template), file, bindings=[] }).
+-record(template, {?ELEMENT_BASE(element_template), file, bindings=[], mime_type="text/html; charset=utf-8"}).
 -record(function_el, {?ELEMENT_BASE(element_function), function=fun() -> [] end}).
 -record(body, {?ELEMENT_BASE(element_body), body=[]}).
 -record(h1, {?ELEMENT_BASE(element_h1), text="", body=[], html_encode=true}).
