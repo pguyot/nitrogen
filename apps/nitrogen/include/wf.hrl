@@ -16,6 +16,8 @@
 -type wf_triggerpath()     :: wf_path().
 -type wf_id()              :: atom() | iodata().
 
+-type wf_redirect_status() :: permanent | temp | seeother | integer().
+
 %%% CONTEXT %%%
 
 -type wf_context_type() ::

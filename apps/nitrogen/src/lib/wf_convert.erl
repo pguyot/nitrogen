@@ -15,7 +15,8 @@
     html_encode/1, html_encode/2,
     hex_encode/1, hex_decode/1,
     url_encode/1, url_decode/1,
-    js_escape/1
+    js_escape/1,
+    redirect_status_to_code/1
 ]).
 
 -include_lib ("wf.hrl").
@@ -245,3 +246,9 @@ qs_revdecode([Lo, Hi, ?PERCENT | Rest], Acc) when ?IS_HEX(Lo), ?IS_HEX(Hi) ->
     qs_revdecode(Rest, [(unhexdigit(Lo) bor (unhexdigit(Hi) bsl 4)) | Acc]);
 qs_revdecode([C | Rest], Acc) ->
     qs_revdecode(Rest, [C | Acc]).
+
+-spec redirect_status_to_code(wf_redirect_status()) -> integer().
+redirect_status_to_code(Code) when is_integer(Code) -> Code;
+redirect_status_to_code(permanent) -> 301;
+redirect_status_to_code(temp) -> 302;
+redirect_status_to_code(seeother) -> 303.

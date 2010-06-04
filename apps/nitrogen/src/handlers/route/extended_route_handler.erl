@@ -17,11 +17,10 @@
         |   {string(), static_file}
         |   {string(), static_file, [atom() | {atom(), any()}]}
         |   {string(), redirect, string()}
-        |   {string(), redirect, string(), redirect_status()}.
+        |   {string(), redirect, string(), wf_redirect_status()}.
 
 % Internal type.
--type resolved_route() :: {static_file, string()} | {static_file, string(), string()} | {module, module(), string()} | {redirect, integer(), string()}.
--type redirect_status() :: permanent | temp | seeother | integer().
+-type resolved_route() :: {static_file, string()} | {static_file, string(), string()} | {module, module(), string()} | {redirect, wf_redirect_status(), string()}.
 
 %% @doc
 %% The extended route handler is an extension of the named route handler.
@@ -134,7 +133,7 @@ resolve(_Path, {Regex, redirect, Replacement}) ->
 resolve(_Path, {Regex, redirect, Replacement, Code}) ->
     resolve_redirect(Code, Regex, Replacement).
 
--spec resolve_redirect(redirect_status(), iodata(), iodata()) -> {value, {redirect, integer(), string()}} | false.
+-spec resolve_redirect(wf_redirect_status(), iodata(), iodata()) -> {value, {redirect, integer(), string()}} | false.
 resolve_redirect(RedirectStatus, Regex, Replacement) ->
     RequestBridge = wf_context:request_bridge(),
     URI = RequestBridge:uri(),
@@ -142,16 +141,10 @@ resolve_redirect(RedirectStatus, Regex, Replacement) ->
     case re:run(URI, RegexC, [{capture, none}]) of
         match ->
             RedirectURI = re:replace(URI, RegexC, Replacement, [{return, list}]),
-            Code = redirect_status_to_code(RedirectStatus),
+            Code = wf_convert:redirect_status_to_code(RedirectStatus),
             {value, {redirect, Code, RedirectURI}};
         nomatch -> false
     end.
-
--spec redirect_status_to_code(redirect_status()) -> integer().
-redirect_status_to_code(Code) when is_integer(Code) -> Code;
-redirect_status_to_code(permanent) -> 301;
-redirect_status_to_code(temp) -> 302;
-redirect_status_to_code(seeother) -> 303.
 
 -spec matches_prefix(string(), string()) -> boolean().
 matches_prefix(Path, Prefix) ->
