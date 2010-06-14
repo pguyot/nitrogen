@@ -21,10 +21,10 @@ build_response(_Arg, Res) ->
 
             % Get the content type...
             ContentType = coalesce([
-                proplists:get_value(content_type, Res#response.headers),
-                proplists:get_value("content-type", Res#response.headers),
-                proplists:get_value("Content-Type", Res#response.headers),
-                proplists:get_value("CONTENT-TYPE", Res#response.headers),
+                kvl3(content_type, Res#response.headers),
+                kvl3("content-type", Res#response.headers),
+                kvl3("Content-Type", Res#response.headers),
+                kvl3("CONTENT-TYPE", Res#response.headers),
                 "text/html"
             ]),
 
@@ -39,6 +39,12 @@ build_response(_Arg, Res) ->
             serve_file(Path, []);
         {file, Path, Options} ->
             serve_file(Path, Options)
+    end.
+
+kvl3(Key,L) ->
+    case lists:keysearch(Key,2,L) of
+        {value, {_,_,Val}} -> Val;
+        _                  -> undefined
     end.
 
 coalesce([]) -> undefined;
