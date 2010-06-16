@@ -17,8 +17,16 @@ build_response({Req, DocRoot}, Res) ->
                 [create_cookie_header(X) || X <- Res#response.cookies]
             ]),		
 
+            % Ensure content type...
+            F = fun(Key) -> lists:keymember(Key, 1, Headers) end,
+            HasContentType = lists:any(F, ["content-type", "Content-Type", "CONTENT-TYPE"]),
+            case HasContentType of
+                true -> Headers2 = Headers;
+                false -> Headers2 = [{"Content-Type", "text/html"}]
+            end,
+
             % Send the mochiweb response...
-            Req:respond({Code, Headers, Body});
+            Req:respond({Code, Headers2, Body});
         {file, Path, Options0} ->
             Options = case proplists:is_defined(docroot, Options0) of
                 true -> Options0;
