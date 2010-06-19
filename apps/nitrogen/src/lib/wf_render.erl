@@ -19,7 +19,10 @@ render(Elements, Actions, Anchor, Trigger, Target) ->
     % Second, render any actions.
     {ok, Script1} = wf_render_actions:render_actions(Actions, Anchor, Trigger, Target),
 
-    % Third, render queued actions that were a result of step 1 or 2.
+    % Third, render flash.
+    element_flash:update(),	
+
+    % Fourth, render queued actions that were a result of step 1, 2 or 3.
     QueuedActions = wf_context:actions(),
     {ok, Script2} = wf_render_actions:render_actions(QueuedActions, Anchor, Trigger, Target),
 

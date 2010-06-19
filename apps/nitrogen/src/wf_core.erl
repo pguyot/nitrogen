@@ -10,6 +10,7 @@
 % from other Erlang web frameworks or resource servers, such as WebMachine, 
 % Erlang Web, ErlyWeb, etc.
 
+-spec run() -> ok.
 run() ->
     Request = wf_context:request_bridge(),
     Response = wf_context:response_bridge(),
@@ -63,9 +64,6 @@ run_catched() ->
     end.
 
 finish_dynamic_request() ->
-    % Update flash and render.
-    element_flash:update(),	
-
     % Get elements and actions...
     Elements = wf_context:data(),
     wf_context:clear_data(),
@@ -95,6 +93,9 @@ finish_static_request(Options) ->
     build_static_file_response(Path, Options).
 
 finish_redirect_request(RedirectStatus) ->
+    % Call finish on all handlers.
+    call_finish_on_handlers(),
+
     Path = wf_context:path_info(),
     build_redirect_response(RedirectStatus, Path).
 
