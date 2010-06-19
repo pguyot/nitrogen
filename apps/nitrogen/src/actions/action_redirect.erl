@@ -14,7 +14,8 @@ render_action(Record) ->
 % redirect to a given URL. This function is called from wf:redirect*/1
 % If the request is a first_request (i.e. not AJAX), we redirect using
 % Location: header. Otherwise, we wire a redirect action.
--spec redirect(iodata()) -> iodata().
+% This function always return the empty list.
+-spec redirect(iodata()) -> [].
 redirect(Url) -> 
     case wf_context:type() of
         first_request ->
@@ -23,7 +24,8 @@ redirect(Url) ->
             wf:header(location, Url);
         postback_request ->
             wf:wire(#redirect { url=Url })
-    end.
+    end,
+    [].
 
 -spec redirect_to_login(iodata()) -> iodata().
 redirect_to_login(LoginUrl) ->
