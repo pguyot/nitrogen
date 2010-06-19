@@ -41,7 +41,7 @@ get_cached_template(File) ->
         true -> 
             %% Recache if the file has been modified. Otherwise, reset
             %% the CacheTime timer...
-            case LastMod /= filelib:last_modified(File) of
+            case LastMod =/= filelib:last_modified(FullPath) of
                 true -> 
                     true;
                 false ->
