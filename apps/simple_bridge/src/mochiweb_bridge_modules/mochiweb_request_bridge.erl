@@ -29,11 +29,12 @@ uri({Req, _DocRoot}) ->
     Req:get(raw_path).
 
 peer_ip({Req, _DocRoot}) -> 
-    Socket = Req:get(socket),
-    {ok, {IP, _Port}} = inet:peername(Socket),
+    IPStr = Req:get(peer),
+    {ok, IP} = inet_parse:address(IPStr),
     IP.
 
-peer_port({Req, _DocRoot}) -> 
+% doesn't work for ssl/x-forwarded-for peer.
+peer_port({Req, _DocRoot}) ->
     Socket = Req:get(socket),
     {ok, {_IP, Port}} = inet:peername(Socket),
     Port.
