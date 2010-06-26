@@ -1,6 +1,7 @@
 {application, nitrogen, [
     {description,  "Nitrogen Web Framework for Erlang"},
-    {vsn,          "2.0"},
+    {vsn,          "2.0.1"},
+    {registered, []},
     {modules,      [
         action_add_class,
         action_alert,
@@ -48,7 +49,6 @@
         element_draggable,
         element_dropdown,
         element_droppable,
-        element_file,
         element_flash,
         element_function,
         element_google_chart,
@@ -63,6 +63,7 @@
         element_image,
         element_img,
         element_inplace_textbox,
+        element_inplace_textarea,
         element_label,
         element_li,
         element_lightbox,
@@ -103,6 +104,7 @@
         nitrogen_dev,
         nprocreg_registry_handler,
         passthrough_route_handler,
+        nprocreg_registry_handler,
         process_registry_handler,
         query_handler,
         role_handler,

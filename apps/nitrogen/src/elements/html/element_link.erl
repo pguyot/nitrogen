@@ -27,4 +27,5 @@ render_element(Record) ->
         {href, Record#link.url},
         {class, [link, Record#link.class]},
         {style, Record#link.style},
-        {title, Record#link.title} | Record#link.attrs]).
+        {title, wf:html_encode(Record#link.title, Record#link.html_encode)} | Record#link.attrs]).
+    ]).

@@ -17,6 +17,6 @@
         yaws_request_bridge,
         yaws_response_bridge
     ]},
-    {registered, []},
-    {applications, [kernel, stdlib]}
+    {applications, [kernel, stdlib, sasl, inets]},
+    {registered, []}
 ]}.
