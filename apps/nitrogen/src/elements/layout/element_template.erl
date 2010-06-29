@@ -72,7 +72,7 @@ parse_template(File) ->
 		{ok, B} -> parse(B);
 		{error, Reason} -> 
 			?LOG("Error reading file: ~s (~p)~n", [File1, Reason]),
-			[]
+            throw({template_not_found, File1})
 	end.
 
 %%% PARSE %%%
